@@ -15,6 +15,16 @@ type Resource = {
   url: string;
   tracks: Track[];
   featured?: boolean;
+  paperUrl?: string;
+};
+
+type CourseUnit = {
+  id: string;
+  number: string;
+  title: string;
+  points: string;
+  output: string;
+  url: string;
 };
 
 const resources: Resource[] = [
@@ -70,6 +80,7 @@ const resources: Resource[] = [
     url: "https://www.bilibili.com/video/BV1SPJazBEuK/",
     tracks: ["science", "arts"],
     featured: true,
+    paperUrl: "/papers/english-foundation-paper.pdf",
   },
   {
     title: "2025 陕西专升本英语真题解析",
@@ -80,6 +91,7 @@ const resources: Resource[] = [
     action: "直接观看",
     url: "https://www.bilibili.com/video/BV143ywBfExo/",
     tracks: ["science", "arts"],
+    paperUrl: "/papers/english-foundation-paper.pdf",
   },
   {
     title: "陕西英语 2020—2021 真题逐题解析",
@@ -90,6 +102,7 @@ const resources: Resource[] = [
     action: "直接观看",
     url: "https://www.bilibili.com/video/BV1bu411z7UF/",
     tracks: ["science", "arts"],
+    paperUrl: "/papers/english-foundation-paper.pdf",
   },
   {
     title: "陕西专升本数学必刷 800 题",
@@ -101,6 +114,7 @@ const resources: Resource[] = [
     url: "https://www.bilibili.com/video/BV1w4ymBjE3C/",
     tracks: ["science"],
     featured: true,
+    paperUrl: "/papers/math-foundation-paper.pdf",
   },
   {
     title: "2027 专升本高数零基础全套课",
@@ -111,6 +125,7 @@ const resources: Resource[] = [
     action: "直接观看",
     url: "https://www.bilibili.com/video/BV1HP411t7cS/",
     tracks: ["science"],
+    paperUrl: "/papers/math-foundation-paper.pdf",
   },
   {
     title: "2026 陕西专升本大学语文",
@@ -122,6 +137,7 @@ const resources: Resource[] = [
     url: "https://www.bilibili.com/video/BV1U341zdEj1/",
     tracks: ["arts"],
     featured: true,
+    paperUrl: "/papers/chinese-foundation-paper.pdf",
   },
   {
     title: "陕西专升本大学语文零基础全程课",
@@ -132,6 +148,7 @@ const resources: Resource[] = [
     action: "直接观看",
     url: "https://www.bilibili.com/video/BV1nG4y187GU/",
     tracks: ["arts"],
+    paperUrl: "/papers/chinese-foundation-paper.pdf",
   },
   {
     title: "陕西专升本最新视频检索页",
@@ -142,6 +159,37 @@ const resources: Resource[] = [
     action: "查看最新结果",
     url: "https://search.bilibili.com/all?keyword=%E9%99%95%E8%A5%BF%E4%B8%93%E5%8D%87%E6%9C%AC%E8%80%83%E8%AF%95",
     tracks: ["science", "arts"],
+  },
+];
+
+const scienceCourseGroups: { subject: string; subtitle: string; units: CourseUnit[] }[] = [
+  {
+    subject: "大学英语",
+    subtitle: "所有理工考生必考 · 先语法，再题型，最后陕西真题",
+    units: [
+      { id: "en-words", number: "01", title: "词汇与词性", points: "名词、冠词、代词、形容词、副词、介词与常见搭配", output: "做一张词性判断表；每天30词", url: "https://www.bilibili.com/video/BV1X4411J7yd/?p=2" },
+      { id: "en-sentence", number: "02", title: "句子骨架", points: "句子成分、五大基本句型、主谓一致与英文造句", output: "能独立拆出主谓宾 / 主系表", url: "https://www.bilibili.com/video/BV1ai3yzoEwE/?p=3" },
+      { id: "en-tense", number: "03", title: "时态与语态", points: "一般时、进行时、完成时、被动语态与时间线", output: "整理时态结构和标志词", url: "https://www.bilibili.com/video/BV1ai3yzoEwE/?p=6" },
+      { id: "en-nonfinite", number: "04", title: "非谓语动词", points: "不定式、动名词、分词作定语 / 状语 / 宾补", output: "完成20道非谓语单选", url: "https://www.bilibili.com/video/BV1X4411J7yd/?p=29" },
+      { id: "en-clause", number: "05", title: "三大从句与特殊句", points: "名词性从句、定语从句、状语从句、强调与倒装", output: "画出连接词选择流程", url: "https://www.bilibili.com/video/BV1X4411J7yd/?p=41" },
+      { id: "en-cloze", number: "06", title: "完形填空", points: "上下文逻辑、词义辨析、固定搭配与语法线索", output: "做完一篇并标出每空依据", url: "https://www.bilibili.com/video/BV1DT411U7Pj/?p=5" },
+      { id: "en-reading", number: "07", title: "阅读理解", points: "主旨、细节、推断、词义题与证据定位", output: "每篇圈出题干关键词与原文证据", url: "https://www.bilibili.com/video/BV1D44y1M7fV/" },
+      { id: "en-writing", number: "08", title: "翻译与写作", points: "句子主干、英译汉顺序、120-180词短文结构", output: "完成5句翻译和1篇限时作文", url: "https://www.bilibili.com/video/BV1cm4y1P7yW/?p=3" },
+    ],
+  },
+  {
+    subject: "高等数学",
+    subtitle: "陕西理工类主科 · 按依赖关系顺序学习，不要跳章",
+    units: [
+      { id: "math-limit", number: "01", title: "函数、极限与连续", points: "定义域、函数性质、重要极限、无穷小、连续与间断", output: "建立极限计算方法清单", url: "https://www.bilibili.com/video/BV1114y1G7oB/" },
+      { id: "math-derivative", number: "02", title: "一元函数微分学", points: "导数定义、求导法则、高阶导数、隐函数与参数方程", output: "默写求导公式并做30题", url: "https://www.bilibili.com/video/BV1Mh4y1f7Yp/?p=34" },
+      { id: "math-application", number: "03", title: "导数的应用", points: "中值定理、洛必达、单调性、极值、凹凸与渐近线", output: "会画符号表并写完整判定", url: "https://www.bilibili.com/video/BV145411t75K/" },
+      { id: "math-integral", number: "04", title: "一元积分与应用", points: "不定积分、换元、分部、定积分、面积与旋转体体积", output: "按方法分类整理积分题", url: "https://www.bilibili.com/video/BV1VE411i73B/" },
+      { id: "math-vector", number: "05", title: "向量与空间解析几何", points: "向量运算、平面与直线方程、位置关系与距离", output: "整理点积、叉积和方程公式", url: "https://www.bilibili.com/video/BV1Gz41187e2/" },
+      { id: "math-multivariable", number: "06", title: "多元函数与曲线积分", points: "偏导、全微分、极值、二重积分、曲线积分与格林公式", output: "会画积分区域并选择积分次序", url: "https://www.bilibili.com/video/BV1Up4y1Y76a/?p=113" },
+      { id: "math-series", number: "07", title: "无穷级数", points: "数项级数、审敛法、幂级数、收敛半径与展开", output: "做一张审敛法决策表", url: "https://www.bilibili.com/video/BV1Ux4y1B7Ub/" },
+      { id: "math-ode", number: "08", title: "常微分方程", points: "可分离变量、一阶线性、可降阶与二阶常系数方程", output: "先判类型，再套对应解法", url: "https://www.bilibili.com/video/BV1GS4y1Y7bP/" },
+    ],
   },
 ];
 
@@ -173,18 +221,27 @@ export default function Home() {
   const [filter, setFilter] = useState<ResourceType>("全部");
   const [query, setQuery] = useState("");
   const [done, setDone] = useState<string[]>([]);
+  const [courseDone, setCourseDone] = useState<string[]>([]);
 
   const tasks = useMemo(() => [...commonTasks, ...trackTasks[track]], [track]);
 
   useEffect(() => {
     const savedTrack = window.localStorage.getItem("sb-track") as Track | null;
     const savedDone = window.localStorage.getItem("sb-done");
+    const savedCourses = window.localStorage.getItem("sb-science-courses");
     if (savedTrack === "science" || savedTrack === "arts") setTrack(savedTrack);
     if (savedDone) {
       try {
         setDone(JSON.parse(savedDone));
       } catch {
         setDone([]);
+      }
+    }
+    if (savedCourses) {
+      try {
+        setCourseDone(JSON.parse(savedCourses));
+      } catch {
+        setCourseDone([]);
       }
     }
   }, []);
@@ -214,6 +271,14 @@ export default function Home() {
     setFilter("全部");
   }
 
+  function toggleCourse(courseId: string) {
+    const next = courseDone.includes(courseId)
+      ? courseDone.filter((item) => item !== courseId)
+      : [...courseDone, courseId];
+    setCourseDone(next);
+    window.localStorage.setItem("sb-science-courses", JSON.stringify(next));
+  }
+
   return (
     <main>
       <header className="site-header">
@@ -224,6 +289,7 @@ export default function Home() {
         </a>
         <nav aria-label="主导航">
           <a href="#roadmap">学习路线</a>
+          <a href="#syllabus">知识点课</a>
           <a href="#resources">资源库</a>
           <a href="#checklist">本周计划</a>
         </nav>
@@ -250,7 +316,7 @@ export default function Home() {
           </div>
 
           <div className="hero-actions">
-            <a className="primary-button" href="#resources">看适合我的课程 <Arrow /></a>
+            <a className="primary-button" href={track === "science" ? "#syllabus" : "#resources"}>看适合我的课程 <Arrow /></a>
             <a className="text-button" href="#roadmap">先看怎么安排时间 ↓</a>
           </div>
         </div>
@@ -306,15 +372,68 @@ export default function Home() {
         </div>
       </section>
 
+      {track === "science" && (
+        <section className="section syllabus-section" id="syllabus">
+          <div className="section-heading syllabus-heading">
+            <div><span className="section-number">02</span><span className="eyebrow dark">仅理工科</span></div>
+            <h2>知识点课程表</h2>
+            <p>按陕西理工类公共课范围整理。每学完一项就打勾，进度会保存在当前设备；2027 考试说明发布后再做最终核对。</p>
+          </div>
+
+          <div className="syllabus-overview">
+            <div><strong>16</strong><span>个学习单元</span></div>
+            <div><strong>{courseDone.length}</strong><span>已完成</span></div>
+            <div><strong>{Math.round((courseDone.length / 16) * 100)}%</strong><span>课程进度</span></div>
+            <a href="/papers/math-foundation-paper.pdf" target="_blank" rel="noreferrer">先做高数摸底卷 <Arrow /></a>
+          </div>
+
+          <div className="course-groups">
+            {scienceCourseGroups.map((group) => {
+              const groupDone = group.units.filter((unit) => courseDone.includes(unit.id)).length;
+              return (
+                <article className="course-group" key={group.subject}>
+                  <div className="course-group-head">
+                    <div><span>{group.subject === "大学英语" ? "EN" : "∫"}</span><div><h3>{group.subject}</h3><p>{group.subtitle}</p></div></div>
+                    <b>{groupDone} / {group.units.length}</b>
+                  </div>
+                  <div className="course-units">
+                    {group.units.map((unit) => {
+                      const checked = courseDone.includes(unit.id);
+                      return (
+                        <div className={checked ? "course-unit completed" : "course-unit"} key={unit.id}>
+                          <button className="course-check" onClick={() => toggleCourse(unit.id)} aria-label={`${checked ? "取消完成" : "标记完成"}：${unit.title}`} aria-pressed={checked}>
+                            {checked ? "✓" : unit.number}
+                          </button>
+                          <div className="course-unit-copy">
+                            <h4>{unit.title}</h4>
+                            <p>{unit.points}</p>
+                            <small>学完产出：{unit.output}</small>
+                          </div>
+                          <a href={unit.url} target="_blank" rel="noreferrer" aria-label={`观看${unit.title}课程`}>看课 <Arrow /></a>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className="course-paper-row">
+                    <span>学完本组，用整卷检查是否真的掌握</span>
+                    <a href={group.subject === "大学英语" ? "/papers/english-foundation-paper.pdf" : "/papers/math-foundation-paper.pdf"} target="_blank" rel="noreferrer">下载配套试卷 PDF <Arrow /></a>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
       <section className="section featured-section">
         <div className="section-heading compact">
-          <div><span className="section-number">02</span><span className="eyebrow dark">先看这组</span></div>
+          <div><span className="section-number">03</span><span className="eyebrow dark">先看这组</span></div>
           <h2>为你选好的起步课</h2>
           <p>按照“基础课 → 章节题 → 陕西真题”的顺序，不要同时跟三位老师。</p>
         </div>
         <div className="featured-grid">
           {resources.filter((item) => item.featured && item.tracks.includes(track) && item.type !== "官方").map((resource, index) => (
-            <a className="video-card" href={resource.url} target="_blank" rel="noreferrer" key={resource.title}>
+            <article className="video-card" key={resource.title}>
               <div className={`video-poster poster-${index + 1}`}>
                 <span className="video-index">0{index + 1}</span>
                 <span className="play-button" aria-hidden="true">▶</span>
@@ -324,16 +443,19 @@ export default function Home() {
                 <div className="resource-meta"><span>{resource.tag}</span><span>{resource.source}</span></div>
                 <h3>{resource.title}</h3>
                 <p>{resource.description}</p>
-                <b>{resource.action} <Arrow /></b>
+                <div className="video-actions">
+                  <a href={resource.url} target="_blank" rel="noreferrer">观看视频 <Arrow /></a>
+                  {resource.paperUrl && <a className="paper-action" href={resource.paperUrl} target="_blank" rel="noreferrer">配套试卷 PDF ↓</a>}
+                </div>
               </div>
-            </a>
+            </article>
           ))}
         </div>
       </section>
 
       <section className="section resource-section" id="resources">
         <div className="section-heading resource-heading">
-          <div><span className="section-number">03</span><span className="eyebrow dark">可直接打开</span></div>
+          <div><span className="section-number">04</span><span className="eyebrow dark">可直接打开</span></div>
           <h2>学习资源库</h2>
           <p>共收录 {resources.filter((item) => item.tracks.includes(track)).length} 个与你当前类别相关的入口。外部课程可能更新或下架，官方规则始终排第一。</p>
         </div>
@@ -352,15 +474,18 @@ export default function Home() {
 
         <div className="resource-list">
           {visibleResources.map((resource, index) => (
-            <a className="resource-row" href={resource.url} target="_blank" rel="noreferrer" key={resource.title}>
+            <article className="resource-row" key={resource.title}>
               <span className="row-number">{String(index + 1).padStart(2, "0")}</span>
               <div className="row-main">
                 <div className="resource-meta"><span>{resource.type}</span><span>{resource.tag}</span><span>{resource.source}</span></div>
                 <h3>{resource.title}</h3>
                 <p>{resource.description}</p>
               </div>
-              <span className="row-action">{resource.action} <Arrow /></span>
-            </a>
+              <div className="row-actions">
+                <a className="row-action" href={resource.url} target="_blank" rel="noreferrer">{resource.action} <Arrow /></a>
+                {resource.paperUrl && <a className="row-paper-action" href={resource.paperUrl} target="_blank" rel="noreferrer">配套卷 PDF ↓</a>}
+              </div>
+            </article>
           ))}
           {visibleResources.length === 0 && <div className="empty-state">没有找到匹配的资源，换个关键词或选择“全部”试试。</div>}
         </div>
@@ -370,7 +495,7 @@ export default function Home() {
       <section className="section checklist-section" id="checklist">
         <div className="checklist-panel">
           <div className="checklist-copy">
-            <div><span className="section-number light">04</span><span className="eyebrow">别等“准备好”</span></div>
+            <div><span className="section-number light">05</span><span className="eyebrow">别等“准备好”</span></div>
             <h2>你的第一周，<br />只做这 6 件事</h2>
             <p>勾选状态会保存在这台设备上。完成 4 项就算本周合格，不追求一次做到满分。</p>
             <div className="progress-wrap">
@@ -397,7 +522,7 @@ export default function Home() {
 
       <section className="section method-section">
         <div className="section-heading compact">
-          <div><span className="section-number">05</span><span className="eyebrow dark">少走弯路</span></div>
+          <div><span className="section-number">06</span><span className="eyebrow dark">少走弯路</span></div>
           <h2>三个“不要”</h2>
         </div>
         <div className="dont-grid">

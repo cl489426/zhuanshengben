@@ -40,5 +40,6 @@ next-env.d.ts
 /.wrangler/
 /outputs/
 /work/
+/tmp/
 .devserver.*.log
 .devserver.pid
