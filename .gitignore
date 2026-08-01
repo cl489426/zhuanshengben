@@ -41,5 +41,6 @@ next-env.d.ts
 /outputs/
 /work/
 /tmp/
+/scripts/__pycache__/
 .devserver.*.log
 .devserver.pid

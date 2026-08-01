@@ -27,6 +27,20 @@ type CourseUnit = {
   url: string;
 };
 
+type LatestUpdate = {
+  status: "live" | "fallback";
+  checkedAt: string;
+  has2027Notice: boolean;
+  notices: { title: string; url: string }[];
+};
+
+const predictionPapers = [
+  { subject: "大学英语", set: "A", focus: "语法与阅读证据定位", url: "/papers/2027-english-prediction-A.pdf" },
+  { subject: "大学英语", set: "B", focus: "时态从句与写作输出", url: "/papers/2027-english-prediction-B.pdf" },
+  { subject: "高等数学", set: "A", focus: "极限、导数、积分主干", url: "/papers/2027-math-prediction-A.pdf" },
+  { subject: "高等数学", set: "B", focus: "多元、级数、微分方程", url: "/papers/2027-math-prediction-B.pdf" },
+];
+
 const resources: Resource[] = [
   {
     title: "2026 陕西专升本考试招生工作实施办法",
@@ -222,6 +236,8 @@ export default function Home() {
   const [query, setQuery] = useState("");
   const [done, setDone] = useState<string[]>([]);
   const [courseDone, setCourseDone] = useState<string[]>([]);
+  const [latest, setLatest] = useState<LatestUpdate | null>(null);
+  const [checkingUpdates, setCheckingUpdates] = useState(false);
 
   const tasks = useMemo(() => [...commonTasks, ...trackTasks[track]], [track]);
 
@@ -249,6 +265,23 @@ export default function Home() {
   useEffect(() => {
     window.localStorage.setItem("sb-track", track);
   }, [track]);
+
+  async function checkUpdates() {
+    setCheckingUpdates(true);
+    try {
+      const response = await fetch("/api/latest", { cache: "no-store" });
+      if (!response.ok) throw new Error("update check failed");
+      setLatest(await response.json());
+    } catch {
+      setLatest(null);
+    } finally {
+      setCheckingUpdates(false);
+    }
+  }
+
+  useEffect(() => {
+    void checkUpdates();
+  }, []);
 
   const visibleResources = resources.filter((resource) => {
     const inTrack = resource.tracks.includes(track);
@@ -288,6 +321,7 @@ export default function Home() {
           <span className="brand-province">陕西</span>
         </a>
         <nav aria-label="主导航">
+          <a href="#updates">实时更新</a>
           <a href="#roadmap">学习路线</a>
           <a href="#syllabus">知识点课</a>
           <a href="#resources">资源库</a>
@@ -342,6 +376,29 @@ export default function Home() {
         <span className="truth-label">你现在最该做的</span>
         <p><b>先查专业对应，再定公共课路线。</b> 在校生还要通过本校组织的专业课考核；它不是省统考，但不合格就不能报。</p>
         <a href="https://www.sneea.cn/info/1031/17032.htm" target="_blank" rel="noreferrer">查我的专业 <Arrow /></a>
+      </section>
+
+      <section className="section update-section" id="updates">
+        <div className="update-head">
+          <div><span className="live-dot" aria-hidden="true" /><span className="eyebrow dark">官方信息监测</span></div>
+          <h2>每次打开，检查一次最新公告</h2>
+          <button onClick={checkUpdates} disabled={checkingUpdates}>{checkingUpdates ? "正在检查…" : "立即刷新 ↻"}</button>
+        </div>
+        <div className="update-grid">
+          <article className="update-status">
+            <span>{latest?.has2027Notice ? "发现更新" : "当前基线"}</span>
+            <strong>{latest?.has2027Notice ? "检测到 2027 专升本公告" : "2027 正式公告暂未检测到"}</strong>
+            <p>在正式通知发布前，课程和套卷依据 2026 陕西统考规则及稳定考点整理；检测结果只作提醒，最终以官方原文为准。</p>
+            <small>{latest ? `检查时间：${new Date(latest.checkedAt).toLocaleString("zh-CN", { hour12: false })}${latest.status === "fallback" ? " · 官方站暂不可达，显示已核对信息" : " · 已连接陕西省教育考试院"}` : checkingUpdates ? "正在连接陕西省教育考试院…" : "暂时无法检查，请稍后重试或打开官方栏目。"}</small>
+          </article>
+          <div className="notice-list">
+            <div className="notice-list-title"><b>官方栏目最新条目</b><a href="https://www.sneea.cn/zc/zsbks.htm" target="_blank" rel="noreferrer">打开完整栏目 <Arrow /></a></div>
+            {(latest?.notices ?? []).map((notice, index) => (
+              <a href={notice.url} target="_blank" rel="noreferrer" key={notice.url}><span>{String(index + 1).padStart(2, "0")}</span><b>{notice.title}</b><Arrow /></a>
+            ))}
+            {!latest && <div className="notice-loading">等待最新公告列表…</div>}
+          </div>
+        </div>
       </section>
 
       <section className="section roadmap-section" id="roadmap">
@@ -425,6 +482,26 @@ export default function Home() {
         </section>
       )}
 
+      {track === "science" && (
+        <section className="section prediction-section" id="predictions">
+          <div className="section-heading compact">
+            <div><span className="section-number">P</span><span className="eyebrow dark">2027 理工类</span></div>
+            <h2>原创预测套卷</h2>
+            <p>按当前陕西理工类公共课结构制作，用来练速度、查薄弱点。它们不是官方押题，不承诺命中；2027 考试说明发布后会以新范围为准调整。</p>
+          </div>
+          <div className="prediction-grid">
+            {predictionPapers.map((paper, index) => (
+              <article key={paper.url}>
+                <span className="prediction-index">0{index + 1}</span>
+                <div><small>{paper.subject}</small><h3>预测卷 {paper.set}</h3><p>{paper.focus}</p></div>
+                <a href={paper.url} target="_blank" rel="noreferrer">打开 PDF ↓</a>
+              </article>
+            ))}
+          </div>
+          <div className="prediction-note"><b>使用顺序：</b>先做 A 卷定位问题，补课 7 天后做 B 卷验证。两卷都必须按 150 分钟计时，答案页结束前不要打开。</div>
+        </section>
+      )}
+
       <section className="section featured-section">
         <div className="section-heading compact">
           <div><span className="section-number">03</span><span className="eyebrow dark">先看这组</span></div>
@@ -489,7 +566,7 @@ export default function Home() {
           ))}
           {visibleResources.length === 0 && <div className="empty-state">没有找到匹配的资源，换个关键词或选择“全部”试试。</div>}
         </div>
-        <p className="source-note">资源核对日期：2026-08-01 · 视频均跳转至原发布页，不提供或转载付费资料。</p>
+        <p className="source-note">基础资源核对日期：2026-08-01 · 页面顶部可实时检查官方栏目 · 视频均跳转至原发布页，不提供或转载付费资料。</p>
       </section>
 
       <section className="section checklist-section" id="checklist">
@@ -541,7 +618,7 @@ export default function Home() {
             <a href="https://www.chsi.com.cn/" target="_blank" rel="noreferrer">学信网</a>
           </div>
         </div>
-        <div className="footer-bottom"><span>政策有时效，请以 2027 年陕西省教育考试院正式公告为准。</span><span>整理于 2026-08-01</span></div>
+        <div className="footer-bottom"><span>政策有时效，请以 2027 年陕西省教育考试院正式公告为准。</span><span>实时检查入口已启用</span></div>
       </footer>
 
       <a className="mobile-start" href="#checklist">开始第一周 · {progress}%</a>
