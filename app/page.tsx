@@ -709,7 +709,7 @@ export default function Home() {
               <div className="history-head"><div><span>学习档案</span><h3>每周完成记录</h3></div><p>记录保存在当前设备和浏览器中；换设备或清理浏览器数据不会自动同步。</p></div>
               <div className="history-list">
                 {historyRecords.slice(0, 10).map((record, index) => (
-                  <details key={record.weekKey} defaultOpen={index === 0}>
+                    <details key={record.weekKey} open={index === 0}>
                     <summary><span>第 {record.weekNumber} 周</span><b>{formatDateRange(record.start, record.end)} · {record.phaseLabel}</b><strong>{record.completed.length}/{record.tasks.length}</strong></summary>
                     <ul>{record.tasks.map((item) => <li className={record.completed.includes(item.id) ? "done" : ""} key={item.id}><span>{record.completed.includes(item.id) ? "✓" : "○"}</span>{item.label}</li>)}</ul>
                   </details>

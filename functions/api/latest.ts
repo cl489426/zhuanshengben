@@ -1,7 +1,5 @@
 const OFFICIAL_INDEX = "https://www.sneea.cn/zc/zsbks.htm";
 
-export const dynamic = "force-static";
-
 type Notice = { title: string; url: string };
 
 const fallback: Notice[] = [
@@ -9,11 +7,16 @@ const fallback: Notice[] = [
   { title: "2026年陕西省普通高等学校专升本考试招生工作实施办法", url: "https://www.sneea.cn/info/1031/17033.htm" },
 ];
 
-export async function GET() {
+export const onRequestGet = async () => {
   const checkedAt = new Date().toISOString();
+  const headers = {
+    "content-type": "application/json; charset=utf-8",
+    "cache-control": "public, max-age=300",
+    "access-control-allow-origin": "*",
+  };
+
   try {
     const response = await fetch(OFFICIAL_INDEX, {
-      cache: "no-store",
       headers: { "user-agent": "Mozilla/5.0 (compatible; StudyMapUpdateChecker/1.0)" },
     });
     if (!response.ok) throw new Error(`Official site returned ${response.status}`);
@@ -21,6 +24,7 @@ export async function GET() {
     const matches = [...html.matchAll(/<a[^>]+href="([^"]*info\/1031\/[^"]+)"[^>]*>([\s\S]*?)<\/a>/gi)];
     const notices: Notice[] = [];
     const seen = new Set<string>();
+
     for (const match of matches) {
       const title = match[2].replace(/<[^>]+>/g, "").replace(/&nbsp;/g, " ").trim();
       const url = new URL(match[1], OFFICIAL_INDEX).toString();
@@ -31,8 +35,14 @@ export async function GET() {
       if (notices.length === 5) break;
     }
     if (!notices.length) throw new Error("No notices found");
-    return Response.json({ status: "live", checkedAt, has2027Notice: notices.some((item) => item.title.includes("2027") && item.title.includes("专升本")), notices });
+
+    return new Response(JSON.stringify({
+      status: "live",
+      checkedAt,
+      has2027Notice: notices.some((item) => item.title.includes("2027") && item.title.includes("专升本")),
+      notices,
+    }), { headers });
   } catch {
-    return Response.json({ status: "fallback", checkedAt, has2027Notice: false, notices: fallback });
+    return new Response(JSON.stringify({ status: "fallback", checkedAt, has2027Notice: false, notices: fallback }), { headers });
   }
-}
+};
