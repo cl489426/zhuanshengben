@@ -1,6 +1,14 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
+import {
+  buildWeeklyRecord,
+  carryFrom,
+  formatDateRange,
+  weekKey,
+  type WeeklyHistory,
+  type WeeklyRecord,
+} from "./weekly-plan";
 
 type Track = "science" | "arts";
 type ResourceType = "全部" | "官方" | "英语" | "高数" | "语文" | "真题";
@@ -214,17 +222,8 @@ const phases = [
   { date: "3月起", title: "等公告 · 冲刺", detail: "核对 2027 政策、报名与专业目录；套卷训练并稳住作息。", tone: "coral" },
 ];
 
-const commonTasks = [
-  "做一次英语摸底：限时 40 分钟，记录词汇 / 语法 / 阅读失分",
-  "连续 7 天背词，每天 30 个新词 + 复习旧词",
-  "完成 3 节英语语法课，每节课后做 10 道对应题",
-  "向本校教务处确认专业课考核科目与大致时间",
-];
-
-const trackTasks: Record<Track, string[]> = {
-  science: ["完成函数与极限的第一轮课程", "做 30 道函数 / 极限基础题，并整理 5 个错因"],
-  arts: ["完成语文考试范围与题型导学", "精读 3 篇篇目，整理作者、主旨、手法与名句"],
-};
+const englishPlanUnits = scienceCourseGroups[0].units;
+const mathPlanUnits = scienceCourseGroups[1].units;
 
 function Arrow() {
   return <span aria-hidden="true">↗</span>;
@@ -234,25 +233,17 @@ export default function Home() {
   const [track, setTrack] = useState<Track>("science");
   const [filter, setFilter] = useState<ResourceType>("全部");
   const [query, setQuery] = useState("");
-  const [done, setDone] = useState<string[]>([]);
   const [courseDone, setCourseDone] = useState<string[]>([]);
   const [latest, setLatest] = useState<LatestUpdate | null>(null);
   const [checkingUpdates, setCheckingUpdates] = useState(false);
-
-  const tasks = useMemo(() => [...commonTasks, ...trackTasks[track]], [track]);
+  const [weeklyHistory, setWeeklyHistory] = useState<WeeklyHistory>({});
+  const [weekRecord, setWeekRecord] = useState<WeeklyRecord | null>(null);
+  const [plannerLoaded, setPlannerLoaded] = useState(false);
 
   useEffect(() => {
     const savedTrack = window.localStorage.getItem("sb-track") as Track | null;
-    const savedDone = window.localStorage.getItem("sb-done");
     const savedCourses = window.localStorage.getItem("sb-science-courses");
     if (savedTrack === "science" || savedTrack === "arts") setTrack(savedTrack);
-    if (savedDone) {
-      try {
-        setDone(JSON.parse(savedDone));
-      } catch {
-        setDone([]);
-      }
-    }
     if (savedCourses) {
       try {
         setCourseDone(JSON.parse(savedCourses));
@@ -260,6 +251,7 @@ export default function Home() {
         setCourseDone([]);
       }
     }
+    setPlannerLoaded(true);
   }, []);
 
   useEffect(() => {
@@ -283,6 +275,37 @@ export default function Home() {
     void checkUpdates();
   }, []);
 
+  function ensureWeeklyPlan(completedCourses: string[]) {
+    let history: WeeklyHistory = {};
+    try {
+      history = JSON.parse(window.localStorage.getItem("sb-weekly-history-v1") ?? "{}") as WeeklyHistory;
+    } catch {
+      history = {};
+    }
+    const currentKey = weekKey();
+    let current = history[currentKey];
+    if (!current) {
+      current = buildWeeklyRecord(new Date(), completedCourses, englishPlanUnits, mathPlanUnits, carryFrom(history, currentKey));
+      history = { ...history, [currentKey]: current };
+      window.localStorage.setItem("sb-weekly-history-v1", JSON.stringify(history));
+    }
+    setWeeklyHistory(history);
+    setWeekRecord(current);
+  }
+
+  useEffect(() => {
+    if (!plannerLoaded) return;
+    ensureWeeklyPlan(courseDone);
+  }, [plannerLoaded, courseDone]);
+
+  useEffect(() => {
+    if (!plannerLoaded) return;
+    const timer = window.setInterval(() => {
+      if (weekRecord && weekKey() !== weekRecord.weekKey) ensureWeeklyPlan(courseDone);
+    }, 60000);
+    return () => window.clearInterval(timer);
+  }, [plannerLoaded, weekRecord, courseDone]);
+
   const visibleResources = resources.filter((resource) => {
     const inTrack = resource.tracks.includes(track);
     const inFilter = filter === "全部" || resource.type === filter;
@@ -290,13 +313,22 @@ export default function Home() {
     return inTrack && inFilter && haystack.includes(query.trim().toLowerCase());
   });
 
-  const completedCount = tasks.filter((task) => done.includes(task)).length;
-  const progress = Math.round((completedCount / tasks.length) * 100);
+  const completedCount = weekRecord?.completed.length ?? 0;
+  const taskCount = weekRecord?.tasks.length ?? 0;
+  const progress = taskCount ? Math.round((completedCount / taskCount) * 100) : 0;
+  const carryCount = weekRecord?.tasks.filter((item) => item.kind === "carry").length ?? 0;
+  const historyRecords = Object.values(weeklyHistory).sort((a, b) => b.weekKey.localeCompare(a.weekKey));
 
-  function toggleTask(task: string) {
-    const next = done.includes(task) ? done.filter((item) => item !== task) : [...done, task];
-    setDone(next);
-    window.localStorage.setItem("sb-done", JSON.stringify(next));
+  function toggleWeeklyTask(taskId: string) {
+    if (!weekRecord) return;
+    const completed = weekRecord.completed.includes(taskId)
+      ? weekRecord.completed.filter((item) => item !== taskId)
+      : [...weekRecord.completed, taskId];
+    const nextRecord = { ...weekRecord, completed };
+    const nextHistory = { ...weeklyHistory, [nextRecord.weekKey]: nextRecord };
+    setWeekRecord(nextRecord);
+    setWeeklyHistory(nextHistory);
+    window.localStorage.setItem("sb-weekly-history-v1", JSON.stringify(nextHistory));
   }
 
   function chooseTrack(next: Track) {
@@ -327,7 +359,7 @@ export default function Home() {
           <a href="#resources">资源库</a>
           <a href="#checklist">本周计划</a>
         </nav>
-        <a className="header-cta" href="#checklist">开始第一周</a>
+        <a className="header-cta" href="#checklist">查看本周任务</a>
       </header>
 
       <section className="hero" id="top">
@@ -570,31 +602,58 @@ export default function Home() {
       </section>
 
       <section className="section checklist-section" id="checklist">
-        <div className="checklist-panel">
-          <div className="checklist-copy">
-            <div><span className="section-number light">05</span><span className="eyebrow">别等“准备好”</span></div>
-            <h2>你的第一周，<br />只做这 6 件事</h2>
-            <p>勾选状态会保存在这台设备上。完成 4 项就算本周合格，不追求一次做到满分。</p>
-            <div className="progress-wrap">
-              <div className="progress-label"><span>本周进度</span><b>{completedCount} / {tasks.length}</b></div>
-              <div className="progress-track"><span style={{ width: `${progress}%` }} /></div>
-              <small>{progress === 100 ? "第一周完成。下周把题量提高 20%，不要换老师。" : progress >= 67 ? "已经合格，先把剩余任务收尾。" : "从第一项开始，今天完成一个闭环。"}</small>
+        {track === "science" ? (
+          <>
+            <div className="phase-switcher" aria-label="自动学习阶段">
+              {(["基础搭建", "章节专题", "真题训练", "套卷冲刺"] as const).map((label, index) => {
+                const order = ["foundation", "topic", "papers", "sprint"];
+                const activeIndex = order.indexOf(weekRecord?.phase ?? "foundation");
+                return <span className={index === activeIndex ? "active" : index < activeIndex ? "passed" : ""} key={label}><i>{index < activeIndex ? "✓" : index + 1}</i>{label}</span>;
+              })}
             </div>
-          </div>
-          <div className="task-list">
-            {tasks.map((task, index) => {
-              const checked = done.includes(task);
-              return (
-                <label className={checked ? "task checked" : "task"} key={task}>
-                  <input type="checkbox" checked={checked} onChange={() => toggleTask(task)} />
-                  <span className="custom-check" aria-hidden="true">{checked ? "✓" : ""}</span>
-                  <span className="task-number">0{index + 1}</span>
-                  <span>{task}</span>
-                </label>
-              );
-            })}
-          </div>
-        </div>
+            <div className="checklist-panel">
+              <div className="checklist-copy">
+                <div><span className="section-number light">05</span><span className="eyebrow">每周一自动换新</span></div>
+                <h2>{weekRecord ? `第 ${weekRecord.weekNumber} 周` : "本周计划"}，<br />{weekRecord?.phaseLabel ?? "正在生成"}</h2>
+                <p>{weekRecord ? `${formatDateRange(weekRecord.start, weekRecord.end)}。任务根据尚未完成的英语、高数知识点生成；每周一自动切换。` : "正在读取你的课程进度并生成任务。"}</p>
+                {carryCount > 0 && <div className="carry-alert">本周已顺延 {carryCount} 项未完成任务，先清欠账再开新内容。</div>}
+                <div className="progress-wrap">
+                  <div className="progress-label"><span>本周进度</span><b>{completedCount} / {taskCount}</b></div>
+                  <div className="progress-track"><span style={{ width: `${progress}%` }} /></div>
+                  <small>{progress === 100 ? "本周任务全部完成。保持节奏，下周一会自动生成新计划。" : progress >= 67 ? "已经完成大半，先把顺延项和错题复盘收尾。" : "优先做列表最上方任务，每天完成一个闭环。"}</small>
+                </div>
+              </div>
+              <div className="task-list">
+                {(weekRecord?.tasks ?? []).map((task, index) => {
+                  const checked = weekRecord?.completed.includes(task.id) ?? false;
+                  return (
+                    <div className={`${checked ? "task checked" : "task"}${task.kind === "carry" ? " carried" : ""}`} key={task.id}>
+                      <button className="custom-check" onClick={() => toggleWeeklyTask(task.id)} aria-label={`${checked ? "取消完成" : "标记完成"}：${task.label}`} aria-pressed={checked}>{checked ? "✓" : ""}</button>
+                      <span className="task-number">{String(index + 1).padStart(2, "0")}</span>
+                      <div className="task-copy"><span>{task.label}</span><small>{task.kind === "carry" ? "上周顺延" : task.subject}</small></div>
+                      {task.href && <a href={task.href} target="_blank" rel="noreferrer">去完成 <Arrow /></a>}
+                    </div>
+                  );
+                })}
+                {!weekRecord && <div className="planner-loading">正在生成本周任务…</div>}
+              </div>
+            </div>
+
+            <div className="history-panel">
+              <div className="history-head"><div><span>学习档案</span><h3>每周完成记录</h3></div><p>记录保存在当前设备和浏览器中；换设备或清理浏览器数据不会自动同步。</p></div>
+              <div className="history-list">
+                {historyRecords.slice(0, 10).map((record, index) => (
+                  <details key={record.weekKey} defaultOpen={index === 0}>
+                    <summary><span>第 {record.weekNumber} 周</span><b>{formatDateRange(record.start, record.end)} · {record.phaseLabel}</b><strong>{record.completed.length}/{record.tasks.length}</strong></summary>
+                    <ul>{record.tasks.map((item) => <li className={record.completed.includes(item.id) ? "done" : ""} key={item.id}><span>{record.completed.includes(item.id) ? "✓" : "○"}</span>{item.label}</li>)}</ul>
+                  </details>
+                ))}
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="planner-track-note"><span>∫</span><div><h2>自动周计划目前为理工类设计</h2><p>它会根据英语和高数进度安排任务，并在真题、套卷、冲刺阶段自动换挡。</p><button onClick={() => chooseTrack("science")}>切换到理工类计划</button></div></div>
+        )}
       </section>
 
       <section className="section method-section">
@@ -621,7 +680,7 @@ export default function Home() {
         <div className="footer-bottom"><span>政策有时效，请以 2027 年陕西省教育考试院正式公告为准。</span><span>实时检查入口已启用</span></div>
       </footer>
 
-      <a className="mobile-start" href="#checklist">开始第一周 · {progress}%</a>
+      <a className="mobile-start" href="#checklist">本周计划 · {progress}%</a>
     </main>
   );
 }
