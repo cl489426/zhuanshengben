@@ -353,9 +353,10 @@ export default function Home() {
           <span className="brand-province">陕西</span>
         </a>
         <nav aria-label="主导航">
+          <a href="#top">首页</a>
           <a href="#updates">实时更新</a>
           <a href="#roadmap">学习路线</a>
-          <a href="#syllabus">知识点课</a>
+          <a href={track === "science" ? "#syllabus" : "#resources"}>知识点课</a>
           <a href="#resources">资源库</a>
           <a href="#checklist">本周计划</a>
         </nav>
@@ -680,7 +681,14 @@ export default function Home() {
         <div className="footer-bottom"><span>政策有时效，请以 2027 年陕西省教育考试院正式公告为准。</span><span>实时检查入口已启用</span></div>
       </footer>
 
-      <a className="mobile-start" href="#checklist">本周计划 · {progress}%</a>
+      <nav className="mobile-nav" aria-label="移动端快速导航">
+        <a href="#top"><span aria-hidden="true">⌂</span><b>首页</b></a>
+        <a href="#updates"><span aria-hidden="true">↻</span><b>更新</b></a>
+        <a href="#roadmap"><span aria-hidden="true">◇</span><b>路线</b></a>
+        <a href={track === "science" ? "#syllabus" : "#resources"}><span aria-hidden="true">▤</span><b>课程</b></a>
+        <a href="#resources"><span aria-hidden="true">⌕</span><b>资源</b></a>
+        <a href="#checklist"><span aria-hidden="true">✓</span><b>计划 {progress}%</b></a>
+      </nav>
     </main>
   );
 }
