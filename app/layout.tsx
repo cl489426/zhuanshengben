@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { headers } from "next/headers";
 import "./globals.css";
 
@@ -11,6 +11,17 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "升本地图｜陕西专升本学习资源与备考路线",
     description: "面向 2027 陕西统招专升本考生的一页式学习导航：每周自动计划、理工科课程、可下载电子题库、官方公告检查与原创预测套卷。",
+    applicationName: "陕西专升本学习地图",
+    formatDetection: {
+      telephone: false,
+      email: false,
+      address: false,
+    },
+    appleWebApp: {
+      capable: true,
+      statusBarStyle: "black-translucent",
+      title: "升本地图",
+    },
     openGraph: {
       title: "陕西专升本 · 学习地图",
       description: "英语高数课程、可下载电子题库、每周自动计划与冲刺套卷。",
@@ -26,6 +37,14 @@ export async function generateMetadata(): Promise<Metadata> {
     },
   };
 }
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  colorScheme: "light",
+  themeColor: "#173f35",
+};
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (

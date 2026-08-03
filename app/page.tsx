@@ -254,6 +254,22 @@ function Arrow() {
   return <span aria-hidden="true">↗</span>;
 }
 
+function readStorage(key: string) {
+  try {
+    return window.localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function writeStorage(key: string, value: string) {
+  try {
+    window.localStorage.setItem(key, value);
+  } catch {
+    // Some embedded browsers disable storage. The page should still remain usable.
+  }
+}
+
 export default function Home() {
   const [track, setTrack] = useState<Track>("science");
   const [filter, setFilter] = useState<ResourceType>("全部");
@@ -266,8 +282,8 @@ export default function Home() {
   const [plannerLoaded, setPlannerLoaded] = useState(false);
 
   useEffect(() => {
-    const savedTrack = window.localStorage.getItem("sb-track") as Track | null;
-    const savedCourses = window.localStorage.getItem("sb-science-courses");
+    const savedTrack = readStorage("sb-track") as Track | null;
+    const savedCourses = readStorage("sb-science-courses");
     if (savedTrack === "science" || savedTrack === "arts") setTrack(savedTrack);
     if (savedCourses) {
       try {
@@ -280,7 +296,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    window.localStorage.setItem("sb-track", track);
+    writeStorage("sb-track", track);
   }, [track]);
 
   async function checkUpdates() {
@@ -303,7 +319,7 @@ export default function Home() {
   function ensureWeeklyPlan(completedCourses: string[]) {
     let history: WeeklyHistory = {};
     try {
-      history = JSON.parse(window.localStorage.getItem("sb-weekly-history-v1") ?? "{}") as WeeklyHistory;
+      history = JSON.parse(readStorage("sb-weekly-history-v1") ?? "{}") as WeeklyHistory;
     } catch {
       history = {};
     }
@@ -312,7 +328,7 @@ export default function Home() {
     if (!current) {
       current = buildWeeklyRecord(new Date(), completedCourses, englishPlanUnits, mathPlanUnits, carryFrom(history, currentKey));
       history = { ...history, [currentKey]: current };
-      window.localStorage.setItem("sb-weekly-history-v1", JSON.stringify(history));
+      writeStorage("sb-weekly-history-v1", JSON.stringify(history));
     }
     setWeeklyHistory(history);
     setWeekRecord(current);
@@ -353,7 +369,7 @@ export default function Home() {
     const nextHistory = { ...weeklyHistory, [nextRecord.weekKey]: nextRecord };
     setWeekRecord(nextRecord);
     setWeeklyHistory(nextHistory);
-    window.localStorage.setItem("sb-weekly-history-v1", JSON.stringify(nextHistory));
+    writeStorage("sb-weekly-history-v1", JSON.stringify(nextHistory));
   }
 
   function chooseTrack(next: Track) {
@@ -366,7 +382,7 @@ export default function Home() {
       ? courseDone.filter((item) => item !== courseId)
       : [...courseDone, courseId];
     setCourseDone(next);
-    window.localStorage.setItem("sb-science-courses", JSON.stringify(next));
+    writeStorage("sb-science-courses", JSON.stringify(next));
   }
 
   return (
