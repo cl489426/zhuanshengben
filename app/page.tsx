@@ -11,7 +11,7 @@ import {
 } from "./weekly-plan";
 
 type Track = "science" | "arts";
-type ResourceType = "全部" | "官方" | "英语" | "高数" | "语文" | "真题";
+type ResourceType = "全部" | "官方" | "英语" | "高数" | "语文" | "真题" | "题库";
 
 type Resource = {
   title: string;
@@ -47,6 +47,11 @@ const predictionPapers = [
   { subject: "大学英语", set: "B", focus: "时态从句与写作输出", url: "/papers/2027-english-prediction-B.pdf" },
   { subject: "高等数学", set: "A", focus: "极限、导数、积分主干", url: "/papers/2027-math-prediction-A.pdf" },
   { subject: "高等数学", set: "B", focus: "多元、级数、微分方程", url: "/papers/2027-math-prediction-B.pdf" },
+];
+
+const questionBanks = [
+  { subject: "大学英语", mark: "EN", units: 8, questions: 48, focus: "词汇、句法、时态、非谓语、从句、完形、阅读、翻译写作", url: "/papers/english-course-question-bank.pdf" },
+  { subject: "高等数学", mark: "∫", units: 8, questions: 48, focus: "函数极限、微分、积分、空间、多元、级数、常微分方程", url: "/papers/math-course-question-bank.pdf" },
 ];
 
 const resources: Resource[] = [
@@ -148,6 +153,26 @@ const resources: Resource[] = [
     url: "https://www.bilibili.com/video/BV1HP411t7cS/",
     tracks: ["science"],
     paperUrl: "/papers/math-foundation-paper.pdf",
+  },
+  {
+    title: "英语课程配套电子题库",
+    source: "升本地图 · 原创",
+    type: "题库",
+    tag: "PDF 可下载",
+    description: "对应英语8个知识点课程单元，共48题，包含答案和规则说明，适合学完一章立即练习。",
+    action: "下载英语题库",
+    url: "/papers/english-course-question-bank.pdf",
+    tracks: ["science", "arts"],
+  },
+  {
+    title: "高数课程配套电子题库",
+    source: "升本地图 · 原创",
+    type: "题库",
+    tag: "PDF 可下载",
+    description: "对应高数8个知识点课程单元，共48题，保留答题空间并附关键步骤答案。",
+    action: "下载高数题库",
+    url: "/papers/math-course-question-bank.pdf",
+    tracks: ["science"],
   },
   {
     title: "2026 陕西专升本大学语文",
@@ -506,12 +531,36 @@ export default function Home() {
                   </div>
                   <div className="course-paper-row">
                     <span>学完本组，用整卷检查是否真的掌握</span>
-                    <a href={group.subject === "大学英语" ? "/papers/english-foundation-paper.pdf" : "/papers/math-foundation-paper.pdf"} target="_blank" rel="noreferrer">下载配套试卷 PDF <Arrow /></a>
+                    <div>
+                      <a href={group.subject === "大学英语" ? "/papers/english-course-question-bank.pdf" : "/papers/math-course-question-bank.pdf"} download>下载电子题库 <Arrow /></a>
+                      <a href={group.subject === "大学英语" ? "/papers/english-foundation-paper.pdf" : "/papers/math-foundation-paper.pdf"} target="_blank" rel="noreferrer">配套试卷 PDF <Arrow /></a>
+                    </div>
                   </div>
                 </article>
               );
             })}
           </div>
+        </section>
+      )}
+
+      {track === "science" && (
+        <section className="section bank-section" id="banks">
+          <div className="section-heading compact">
+            <div><span className="section-number">Q</span><span className="eyebrow dark">课程学完就练</span></div>
+            <h2>配套电子题库</h2>
+            <p>英语、高数各按8个课程单元编排。可以在线打开，也可以下载到手机、平板或电脑，离线练习后再看答案。</p>
+          </div>
+          <div className="bank-grid">
+            {questionBanks.map((bank) => (
+              <article key={bank.subject}>
+                <div className="bank-mark">{bank.mark}</div>
+                <div className="bank-copy"><span>{bank.subject}</span><h3>{bank.subject}课程题库</h3><p>{bank.focus}</p></div>
+                <div className="bank-stats"><div><strong>{bank.units}</strong><small>知识单元</small></div><div><strong>{bank.questions}</strong><small>配套练习</small></div><div><strong>答案</strong><small>集中解析</small></div></div>
+                <div className="bank-actions"><a href={bank.url} target="_blank" rel="noreferrer">在线打开</a><a className="download" href={bank.url} download>下载 PDF ↓</a></div>
+              </article>
+            ))}
+          </div>
+          <p className="bank-note">建议：每学完一个知识点单元，先关闭答案完成对应6题；错题回到课程表复习，再隔3天重做。</p>
         </section>
       )}
 
@@ -572,7 +621,7 @@ export default function Home() {
 
         <div className="resource-tools">
           <div className="filter-row" role="group" aria-label="资源类型筛选">
-            {(["全部", "官方", "英语", "高数", "语文", "真题"] as ResourceType[]).map((item) => (
+            {(["全部", "官方", "英语", "高数", "语文", "真题", "题库"] as ResourceType[]).map((item) => (
               <button key={item} className={filter === item ? "active" : ""} onClick={() => setFilter(item)}>{item}</button>
             ))}
           </div>

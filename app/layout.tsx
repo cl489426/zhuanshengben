@@ -10,10 +10,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: "升本地图｜陕西专升本学习资源与备考路线",
-    description: "面向 2027 陕西统招专升本考生的一页式学习导航：每周自动学习计划、历史进度、官方公告检查、理工科课程与原创预测套卷。",
+    description: "面向 2027 陕西统招专升本考生的一页式学习导航：每周自动计划、理工科课程、可下载电子题库、官方公告检查与原创预测套卷。",
     openGraph: {
       title: "陕西专升本 · 学习地图",
-      description: "每周一自动换任务，按英语高数进度进入基础、真题与冲刺阶段。",
+      description: "英语高数课程、可下载电子题库、每周自动计划与冲刺套卷。",
       type: "website",
       locale: "zh_CN",
       images: [{ url: imageUrl, width: 1733, height: 908, alt: "陕西专升本学习地图" }],
@@ -21,7 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
     twitter: {
       card: "summary_large_image",
       title: "陕西专升本 · 学习地图",
-      description: "每周一自动换任务，按英语高数进度进入基础、真题与冲刺阶段。",
+      description: "英语高数课程、可下载电子题库、每周自动计划与冲刺套卷。",
       images: [imageUrl],
     },
   };
