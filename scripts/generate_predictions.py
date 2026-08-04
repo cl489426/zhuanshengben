@@ -33,28 +33,64 @@ def english_prediction(set_no, accent, variant):
     ]
     grammar = grammar_a if variant == "A" else grammar_b
     story = []
-    story += section("第一部分  词汇与语法（40分）", "共20题，每题2分；本页给出10道核心题，另10题为同型变式自练。")
+    story += section("第一部分  词汇与语法（60分）", "共60题，每题1分；前10题为核心题，后50题按相同规则做变式训练。")
     for i, (stem, opts) in enumerate(grammar, 1): story += q(i, stem, opts)
-    for i in range(11, 21):
-        story += q(i, f"将第 {i-10} 题的关键词、时态或主语替换后重新作答，并写出选择依据。", "A. 原答案  B. 变式答案  C. 两者均可  D. 信息不足")
-    story += section("第二部分  完形填空（20分）", "阅读短文，从每空四个选项中选择最恰当的一项。")
-    story.append(Paragraph("A useful review plan is not a list of ambitious promises. It is a small system that can be repeated. Begin by choosing one weak area. Then set a fixed time, prepare a limited number of questions, and record why each mistake occurred. At the end of the week, do not simply count how many pages you finished. Check whether the same errors appear again. If they do, return to the concept and explain it in your own words. Progress becomes visible when your decisions become faster and your explanations become clearer.", BODY))
-    for i in range(21, 31): story += q(i, f"第 {i-20} 空：根据上下文选择能保持语义连贯的词。", "A. therefore  B. however  C. because  D. unless")
-    story += section("第三部分  阅读理解（30分）", "共两篇，每篇5题；答案必须能在原文找到证据。")
-    passage = "A college study group tested two ways of learning formulas. Group One reread the notes three times. Group Two closed the notes after each reading and wrote down everything they could remember. Both groups spent the same total time. Immediately after the session, their scores were similar. One week later, Group Two remembered more and made fewer application errors. The researchers concluded that retrieving knowledge, although more difficult, produced stronger long-term memory than repeated exposure. They also warned that retrieval works best when students check and correct their answers soon afterwards."
-    story.append(Paragraph(passage, BODY))
-    for i in range(31, 41): story += q(i, f"阅读题 {i-30}：考查主旨、细节、推断、词义或作者态度。", "A. rereading only  B. retrieval with correction  C. longer videos  D. more materials")
-    story += section("第四部分  翻译（20分）", "共5句，每句4分。先找主干，再处理修饰语。")
-    for i, text in enumerate(["稳定的复习节奏比偶尔熬夜更有效。", "你需要记录错误发生的原因。", "公告发布后，应重新核对考试范围。", "只有独立作答，才能发现真正的薄弱点。", "这个方法不仅节省时间，而且提高了准确率。"], 41): story += q(i, text, lines=2)
-    story += section("第五部分  写作（40分）", "写120-180词；内容20分，语言15分，结构5分。")
-    story += q(46, "Write an English composition on 'How I Will Improve My Weakest Subject'. Include the weakness, two concrete actions, and a weekly check.", lines=7)
+    for i in range(11, 61):
+        source = ((i - 11) % 10) + 1
+        story += q(i, f"参照第 {source} 题的考点，替换主语、时态或关键词后重新作答，并在题旁写出规则。", "A. 原结构  B. 变式结构  C. 两者均可  D. 信息不足")
+    story += section("第二部分  阅读理解（50分）", "共4篇，每篇5题，每题2.5分；主旨、细节、推断和词义题都要回原文定位。")
+    reading_sets = [
+        ("Passage One", "A college study group tested two ways of learning formulas. Group One reread the notes three times. Group Two closed the notes after each reading and wrote down what they remembered. Both groups spent the same total time. One week later, Group Two remembered more and made fewer application errors. The researchers concluded that retrieval with timely correction produced stronger long-term memory.", [
+            ("What did Group Two do after reading?", "A. Recalled without notes  B. Watched longer videos  C. Changed books  D. Stopped studying", "A"),
+            ("Which group performed better one week later?", "A. Group One  B. Group Two  C. Both equally  D. Neither group", "B"),
+            ("The study controlled which factor?", "A. Teachers  B. Total study time  C. Textbook price  D. Classroom size", "B"),
+            ("What strengthens long-term memory according to the passage?", "A. Copying  B. Retrieval with correction  C. Faster playback  D. More materials", "B"),
+            ("The word 'retrieval' is closest to _____.", "A. active recall  B. decoration  C. prediction  D. translation", "A"),
+        ]),
+        ("Passage Two", "Official exam notices define who may register, which subjects are tested and when each action must be completed. A screenshot shared in a group chat may be old or incomplete. Students should save the original link, check the publication date and confirm whether the notice applies to them. They should also follow messages from their own college when the college organizes a professional-course assessment.", [
+            ("What do official notices define?", "A. Only scores  B. Eligibility, subjects and deadlines  C. Video courses  D. Dormitory rules", "B"),
+            ("Why can a screenshot be risky?", "A. It may be old or incomplete  B. It is always false  C. It uses too much data  D. It has no pictures", "A"),
+            ("What should students save?", "A. Only a picture  B. The original link  C. A teacher's nickname  D. An advertisement", "B"),
+            ("When should college messages also be checked?", "A. When the college organizes an assessment  B. Only after admission  C. Never  D. After graduation", "A"),
+            ("The passage mainly gives advice about _____.", "A. choosing a phone  B. verifying exam information  C. learning vocabulary  D. writing essays", "B"),
+        ]),
+        ("Passage Three", "A weekly plan is useful only when its tasks are specific. 'Study English' is too vague, while 'finish two reading passages and mark every evidence sentence' can be checked. A realistic plan also leaves time for correction. If the same mistake returns, students should revisit the relevant concept instead of immediately starting another paper.", [
+            ("Which task is specific?", "A. Study harder  B. Learn English  C. Finish two readings and mark evidence  D. Improve soon", "C"),
+            ("What should a realistic plan include?", "A. Correction time  B. More apps  C. No breaks  D. Daily mock exams", "A"),
+            ("What should students do when a mistake returns?", "A. Ignore it  B. Revisit the concept  C. Buy a new book  D. Guess again", "B"),
+            ("The word 'vague' is closest to _____.", "A. unclear  B. difficult  C. correct  D. complete", "A"),
+            ("What is the main idea?", "A. Plans should be specific and include correction  B. Longer plans are better  C. Every day needs a full paper  D. Mistakes should be hidden", "A"),
+        ]),
+        ("Passage Four", "Many learners judge progress by the number of videos they finish. This can be misleading because watching creates familiarity but does not guarantee that knowledge can be used. A better check is to close the lesson, explain the key point in one's own words and solve a new question. If the explanation is incomplete, the learner knows exactly which part to review.", [
+            ("Why can video count be misleading?", "A. Videos are short  B. Familiarity is not mastery  C. Questions are easy  D. Teachers speak slowly", "B"),
+            ("What is a better check?", "A. Replay immediately  B. Explain and solve a new question  C. Count notes  D. Change courses", "B"),
+            ("What does an incomplete explanation reveal?", "A. The exact weak part  B. The exam date  C. The final score  D. The teacher's plan", "A"),
+            ("The word 'guarantee' is closest to _____.", "A. ensure  B. reduce  C. describe  D. avoid", "A"),
+            ("Which title best fits the passage?", "A. Why Video Count Is Not Mastery  B. How to Buy Courses  C. The Longest Lesson  D. Watching at Double Speed", "A"),
+        ]),
+    ]
+    reading_answers = []
+    number = 61
+    for title, passage, questions in reading_sets:
+        story.append(Paragraph(f"<b>{title}</b><br/>{passage}", BODY))
+        for stem, opts, answer in questions:
+            story += q(number, stem, opts)
+            reading_answers.append(f"{number} {answer}")
+            number += 1
+    story.append(PageBreak())
+    story += section("第三部分  英译汉（20分）", "将下列英语短文译成汉语；译文应准确、通顺。")
+    translation = "A steady study routine is more effective than staying up late occasionally. Students need to record why each mistake occurs and return to the relevant concept when the same error appears again. After a new official notice is published, the examination scope and important deadlines should also be checked carefully."
+    story += q(81, translation, lines=8)
+    story.append(PageBreak())
+    story += section("第四部分  写作（20分）", "写120-180词；建议30分钟完成并留5分钟自查。")
+    story += q(82, "Write an English composition on 'How I Will Improve My Weakest Subject'. Include the weakness, two concrete actions, and a weekly check.", lines=10)
     story += answer_banner()
-    story += section("客观题参考与评分", "变式题用于训练方法，不作为官方题型数量承诺。")
+    story += section("客观题参考与评分", "本卷结构按陕西现行考试说明整理；变式题用于训练方法。")
     key = "1 A  2 B  3 C  4 B  5 B  6 C  7 B  8 C  9 A  10 C" if variant == "A" else "1 C  2 B  3 B  4 C  5 C  6 C  7 C  8 A  9 A  10 B"
-    story.append(Paragraph(f"<b>1-10：</b>{key}<br/><b>11-20：</b>先写依据再核对变式；能解释规则才计分。<br/><b>阅读核心：</b>检索练习配合及时纠错，比单纯重复阅读更利于长期记忆。", ANSWER_BODY))
+    story.append(Paragraph(f"<b>1-10：</b>{key}<br/><b>11-60：</b>先写依据再核对变式；能解释规则才计分。<br/><b>61-80：</b>{'  '.join(reading_answers)}", ANSWER_BODY))
     story += section("翻译参考与写作量表", "表达可不同，优先保证意思准确、结构完整。")
-    story.append(Paragraph("41. A steady review routine is more effective than staying up late occasionally.<br/>42. You need to record why each mistake occurs.<br/>43. After the official notice is published, the exam scope should be checked again.<br/>44. Only by answering independently can you find your real weaknesses.<br/>45. This method not only saves time but also improves accuracy.<br/><br/><b>写作：</b>必须包含弱项、两个带频率的行动和每周检查方式；泛泛写“努力学习”不得高分。", ANSWER_BODY))
-    return build_pdf(f"2027-english-prediction-{set_no}.pdf", "大学英语", f"陕西专升本 · 2027 英语原创预测卷 {set_no}", "理工类冲刺套卷", "词汇语法｜完形｜阅读｜翻译｜写作", accent, story)
+    story.append(Paragraph("<b>81 参考：</b>稳定的学习节奏比偶尔熬夜更有效。学生需要记录每次错误发生的原因；同类错误再次出现时，要回到相关概念。新官方公告发布后，还应认真核对考试范围和重要截止日期。<br/><br/><b>82 写作：</b>必须包含弱项、两个带频率的行动和每周检查方式；泛泛写“努力学习”不得高分。", ANSWER_BODY))
+    return build_pdf(f"2027-english-prediction-{set_no}.pdf", "大学英语", f"陕西专升本 · 2027 英语原创预测卷 {set_no}", "理工类冲刺套卷", "词汇语法60｜阅读50｜英译汉20｜写作20", accent, story)
 
 
 def math_prediction(set_no, accent, variant):

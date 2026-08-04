@@ -1,5 +1,8 @@
 "use client";
 
+/* Browser storage and the live-notice request intentionally hydrate client-only state after mount. */
+/* eslint-disable react-hooks/set-state-in-effect */
+
 import { useEffect, useState } from "react";
 import {
   buildWeeklyRecord,
@@ -11,7 +14,7 @@ import {
 } from "./weekly-plan";
 
 type Track = "science" | "arts";
-type ResourceType = "全部" | "官方" | "英语" | "高数" | "语文" | "真题" | "题库";
+type ResourceType = "全部" | "官方" | "英语" | "高数" | "真题" | "题库";
 
 type Resource = {
   title: string;
@@ -50,8 +53,8 @@ const predictionPapers = [
 ];
 
 const questionBanks = [
-  { subject: "大学英语", mark: "EN", units: 8, questions: 48, focus: "词汇、句法、时态、非谓语、从句、完形、阅读、翻译写作", url: "/papers/english-course-question-bank.pdf" },
-  { subject: "高等数学", mark: "∫", units: 8, questions: 48, focus: "函数极限、微分、积分、空间、多元、级数、常微分方程", url: "/papers/math-course-question-bank.pdf" },
+  { subject: "大学英语", mark: "EN", units: 8, questions: 48, focus: "词汇语法、句子结构、非谓语、从句、阅读、英译汉与写作", url: "/papers/english-course-question-bank.pdf" },
+  { subject: "高等数学", mark: "∫", units: 8, questions: 48, focus: "函数极限、一元微积分、空间解析几何、多元微积分、级数、微分方程", url: "/papers/math-course-question-bank.pdf" },
 ];
 
 const resources: Resource[] = [
@@ -63,7 +66,7 @@ const resources: Resource[] = [
     description: "确认报考条件、统考科目、分值和流程。2027 新政策发布前，以它作为规则基线。",
     action: "打开官方原文",
     url: "https://www.sneea.cn/info/1031/17033.htm",
-    tracks: ["science", "arts"],
+    tracks: ["science"],
     featured: true,
   },
   {
@@ -74,7 +77,7 @@ const resources: Resource[] = [
     description: "用你的专科专业，查能报哪些本科专业；多个方向只能选其中一个报考。",
     action: "查询专业对应",
     url: "https://www.sneea.cn/info/1031/17032.htm",
-    tracks: ["science", "arts"],
+    tracks: ["science"],
     featured: true,
   },
   {
@@ -85,7 +88,7 @@ const resources: Resource[] = [
     description: "查看各专业有哪些招生院校。2026 年共列普通本科与职业本科院校，2027 以新目录为准。",
     action: "查看院校目录",
     url: "https://www.sneea.cn/info/1031/17031.htm",
-    tracks: ["science", "arts"],
+    tracks: ["science"],
   },
   {
     title: "专业课考核科目表",
@@ -95,48 +98,48 @@ const resources: Resource[] = [
     description: "查你要参加的两门专业课考核。该考核由生源学校组织，务必问本校教务处时间。",
     action: "查看考核科目",
     url: "https://www.sneea.cn/info/1031/17030.htm",
-    tracks: ["science", "arts"],
+    tracks: ["science"],
   },
   {
-    title: "专升本英语零基础系统课",
-    source: "哔哩哔哩 · 秦天英语",
+    title: "2027 专升本英语零基础全套精讲",
+    source: "哔哩哔哩 · 之了专升本",
     type: "英语",
     tag: "零基础",
-    description: "从词法、句法进入，适合现在开始建立语法框架。先学语法，再用陕西真题校准题型。",
+    description: "覆盖词法、句法、核心词汇和写作，适合作为唯一主课。它是全国通用课，学完对应模块后必须用陕西真题校准。",
     action: "直接观看",
-    url: "https://www.bilibili.com/video/BV1SPJazBEuK/",
-    tracks: ["science", "arts"],
+    url: "https://www.bilibili.com/video/BV1yR4y117yx/",
+    tracks: ["science"],
     featured: true,
-    paperUrl: "/papers/english-foundation-paper.pdf",
+    paperUrl: "/papers/2027-english-prediction-A.pdf",
   },
   {
-    title: "2025 陕西专升本英语真题解析",
-    source: "哔哩哔哩",
+    title: "2025 陕西专升本英语真题逐题解析",
+    source: "哔哩哔哩 · 麻花老师",
     type: "真题",
     tag: "陕西真题",
-    description: "从单项选择开始看老师如何定位考点。先自己计时做，再看讲解，别边看边抄答案。",
+    description: "含单项选择与4篇阅读的分题讲解。先闭卷完成整套，再按错题跳到对应视频，不要边看边做。",
     action: "直接观看",
     url: "https://www.bilibili.com/video/BV143ywBfExo/",
-    tracks: ["science", "arts"],
-    paperUrl: "/papers/english-foundation-paper.pdf",
+    tracks: ["science"],
+    paperUrl: "/papers/2027-english-prediction-A.pdf",
   },
   {
-    title: "陕西英语 2020—2021 真题逐题解析",
-    source: "哔哩哔哩",
+    title: "2024 陕西专升本英语整卷精讲",
+    source: "哔哩哔哩 · 职业猫网校",
     type: "真题",
     tag: "整卷讲解",
-    description: "包含考点梳理、作文模板与单词建议。旧题用于研究稳定考法，不用于预测新题。",
+    description: "4段视频覆盖一套陕西英语真题，适合第一轮学完后做整卷复盘；旧真题用于认识稳定题型，不用于押题。",
     action: "直接观看",
-    url: "https://www.bilibili.com/video/BV1bu411z7UF/",
-    tracks: ["science", "arts"],
-    paperUrl: "/papers/english-foundation-paper.pdf",
+    url: "https://www.bilibili.com/video/BV1EvmNY3Ef6/",
+    tracks: ["science"],
+    paperUrl: "/papers/2027-english-prediction-A.pdf",
   },
   {
-    title: "陕西专升本数学必刷 800 题",
+    title: "2026 陕西专升本高数专项 800 题",
     source: "哔哩哔哩 · 川哥专升本",
     type: "高数",
     tag: "专项刷题",
-    description: "按章节练习，适合学完一章立即巩固。现在不要直接追求题量，先保证每题会复盘。",
+    description: "94节陕西专项刷题课，按章节巩固。每学完主课一章再做对应题，不追播放量，只记录错因和正确步骤。",
     action: "直接观看",
     url: "https://www.bilibili.com/video/BV1w4ymBjE3C/",
     tracks: ["science"],
@@ -144,28 +147,28 @@ const resources: Resource[] = [
     paperUrl: "/papers/math-foundation-paper.pdf",
   },
   {
-    title: "2027 专升本高数零基础全套课",
-    source: "哔哩哔哩 · 正鑫学长",
+    title: "2027 专升本高数零基础全章精讲",
+    source: "哔哩哔哩 · 之了专升本",
     type: "高数",
     tag: "系统课",
-    description: "全国通用系统课；页面注明陕西可学 1—8 章与曲线积分。学习时仍要对照陕西考试说明删减。",
+    description: "全国通用系统主课；发布页明确标注陕西学习1—8章及曲线积分。按本站8个单元选章学习，跳过线性代数与概率论。",
     action: "直接观看",
     url: "https://www.bilibili.com/video/BV1HP411t7cS/",
     tracks: ["science"],
     paperUrl: "/papers/math-foundation-paper.pdf",
   },
   {
-    title: "英语课程配套电子题库",
+    title: "陕西理工类英语配套电子题库",
     source: "升本地图 · 原创",
     type: "题库",
     tag: "PDF 可下载",
-    description: "对应英语8个知识点课程单元，共48题，包含答案和规则说明，适合学完一章立即练习。",
+    description: "对应本站英语8个学习单元，共48题并附答案。重点练词汇语法、阅读、英译汉和写作，不加入听力训练。",
     action: "下载英语题库",
     url: "/papers/english-course-question-bank.pdf",
-    tracks: ["science", "arts"],
+    tracks: ["science"],
   },
   {
-    title: "高数课程配套电子题库",
+    title: "陕西理工类高数配套电子题库",
     source: "升本地图 · 原创",
     type: "题库",
     tag: "PDF 可下载",
@@ -175,73 +178,61 @@ const resources: Resource[] = [
     tracks: ["science"],
   },
   {
-    title: "2026 陕西专升本大学语文",
-    source: "哔哩哔哩",
-    type: "语文",
-    tag: "陕西课程",
-    description: "陕西地区课程入口，适合搭建篇目与题型框架。听完一课后必须配套默写或做题。",
+    title: "陕西专升本高数真题解析合集",
+    source: "哔哩哔哩 · 杰哥专升本",
+    type: "真题",
+    tag: "陕西真题",
+    description: "包含2024陕西高数选择、填空、计算和应用题分段解析，并附陕西考纲讲解。整卷计时后按错题观看。",
     action: "直接观看",
-    url: "https://www.bilibili.com/video/BV1U341zdEj1/",
-    tracks: ["arts"],
-    featured: true,
-    paperUrl: "/papers/chinese-foundation-paper.pdf",
+    url: "https://www.bilibili.com/video/BV1ctdaYgEW7/",
+    tracks: ["science"],
+    paperUrl: "/papers/math-foundation-paper.pdf",
   },
   {
-    title: "陕西专升本大学语文零基础全程课",
-    source: "哔哩哔哩",
-    type: "语文",
-    tag: "入门先导",
-    description: "较早的陕西课程，适合补基础概念。年份较旧，篇目范围与题型请用最新考试说明核对。",
-    action: "直接观看",
-    url: "https://www.bilibili.com/video/BV1nG4y187GU/",
-    tracks: ["arts"],
-    paperUrl: "/papers/chinese-foundation-paper.pdf",
-  },
-  {
-    title: "陕西专升本最新视频检索页",
+    title: "2027 陕西专升本英数最新视频检索",
     source: "哔哩哔哩搜索",
     type: "真题",
     tag: "持续更新",
-    description: "用于补充查找 2027 新大纲解读、最新真题与考情。优先看标题明确写“陕西”的内容。",
+    description: "只用于追踪新公告解读与新真题解析。先核对发布日期和省份，不因“押题”“泄题”标题改变复习范围。",
     action: "查看最新结果",
     url: "https://search.bilibili.com/all?keyword=%E9%99%95%E8%A5%BF%E4%B8%93%E5%8D%87%E6%9C%AC%E8%80%83%E8%AF%95",
-    tracks: ["science", "arts"],
+    tracks: ["science"],
   },
 ];
 
 const scienceCourseGroups: { subject: string; subtitle: string; units: CourseUnit[] }[] = [
   {
     subject: "大学英语",
-    subtitle: "所有理工考生必考 · 先语法，再题型，最后陕西真题",
+    subtitle: "陕西理工类必考 · 词汇语法打底，阅读与输出提分，最后用陕西真题校准",
     units: [
-      { id: "en-words", number: "01", title: "词汇与词性", points: "名词、冠词、代词、形容词、副词、介词与常见搭配", output: "做一张词性判断表；每天30词", url: "https://www.bilibili.com/video/BV1X4411J7yd/?p=2" },
-      { id: "en-sentence", number: "02", title: "句子骨架", points: "句子成分、五大基本句型、主谓一致与英文造句", output: "能独立拆出主谓宾 / 主系表", url: "https://www.bilibili.com/video/BV1ai3yzoEwE/?p=3" },
-      { id: "en-tense", number: "03", title: "时态与语态", points: "一般时、进行时、完成时、被动语态与时间线", output: "整理时态结构和标志词", url: "https://www.bilibili.com/video/BV1ai3yzoEwE/?p=6" },
-      { id: "en-nonfinite", number: "04", title: "非谓语动词", points: "不定式、动名词、分词作定语 / 状语 / 宾补", output: "完成20道非谓语单选", url: "https://www.bilibili.com/video/BV1X4411J7yd/?p=29" },
-      { id: "en-clause", number: "05", title: "三大从句与特殊句", points: "名词性从句、定语从句、状语从句、强调与倒装", output: "画出连接词选择流程", url: "https://www.bilibili.com/video/BV1X4411J7yd/?p=41" },
-      { id: "en-cloze", number: "06", title: "完形填空", points: "上下文逻辑、词义辨析、固定搭配与语法线索", output: "做完一篇并标出每空依据", url: "https://www.bilibili.com/video/BV1DT411U7Pj/?p=5" },
-      { id: "en-reading", number: "07", title: "阅读理解", points: "主旨、细节、推断、词义题与证据定位", output: "每篇圈出题干关键词与原文证据", url: "https://www.bilibili.com/video/BV1D44y1M7fV/" },
-      { id: "en-writing", number: "08", title: "翻译与写作", points: "句子主干、英译汉顺序、120-180词短文结构", output: "完成5句翻译和1篇限时作文", url: "https://www.bilibili.com/video/BV1cm4y1P7yW/?p=3" },
+      { id: "en-words", number: "01", title: "核心词汇与词法", points: "名词、冠词、代词、数词、形容词、副词、介词、连词与常见搭配", output: "每天30词；完成一张词性与搭配表", url: "https://www.bilibili.com/video/BV1yR4y117yx/" },
+      { id: "en-sentence", number: "02", title: "句子骨架与谓语", points: "句子成分、五大基本句型、主谓一致、动词分类与情态动词", output: "能独立标出主谓宾 / 主系表", url: "https://www.bilibili.com/video/BV1yR4y117yx/" },
+      { id: "en-tense", number: "03", title: "时态、语态与虚拟语气", points: "常用时态、被动语态、时间线、条件句与虚拟语气", output: "默写结构并完成30道单选", url: "https://www.bilibili.com/video/BV1yR4y117yx/" },
+      { id: "en-nonfinite", number: "04", title: "非谓语动词", points: "不定式、动名词、现在分词与过去分词的句法功能", output: "先判成分，再完成20道专项题", url: "https://www.bilibili.com/video/BV1yR4y117yx/" },
+      { id: "en-clause", number: "05", title: "三大从句与特殊结构", points: "名词性、定语、状语从句，以及倒装、强调、省略和反意疑问", output: "画出连接词与先行词判断流程", url: "https://www.bilibili.com/video/BV1yR4y117yx/" },
+      { id: "en-reading", number: "06", title: "阅读理解与长难句", points: "细节、主旨、推断、词义题；题干关键词、同义替换与证据定位", output: "完成4篇阅读并标出每题原文依据", url: "https://www.bilibili.com/video/BV1EvmNY3Ef6/" },
+      { id: "en-translation", number: "07", title: "英译汉", points: "拆句、确定主干、从句和非谓语处理、中文语序与通顺表达", output: "限时翻译5句并对照修改", url: "https://www.bilibili.com/video/BV1yR4y117yx/" },
+      { id: "en-writing", number: "08", title: "短文与应用文写作", points: "审题、三段结构、常用衔接、书信格式与120—180词限时输出", output: "30分钟完成1篇并自查语法", url: "https://www.bilibili.com/video/BV1yR4y117yx/" },
     ],
   },
   {
     subject: "高等数学",
-    subtitle: "陕西理工类主科 · 按依赖关系顺序学习，不要跳章",
+    subtitle: "陕西理工类主科 · 严格按考试范围8章排序，系统课只学对应章节",
     units: [
-      { id: "math-limit", number: "01", title: "函数、极限与连续", points: "定义域、函数性质、重要极限、无穷小、连续与间断", output: "建立极限计算方法清单", url: "https://www.bilibili.com/video/BV1114y1G7oB/" },
-      { id: "math-derivative", number: "02", title: "一元函数微分学", points: "导数定义、求导法则、高阶导数、隐函数与参数方程", output: "默写求导公式并做30题", url: "https://www.bilibili.com/video/BV1Mh4y1f7Yp/?p=34" },
-      { id: "math-application", number: "03", title: "导数的应用", points: "中值定理、洛必达、单调性、极值、凹凸与渐近线", output: "会画符号表并写完整判定", url: "https://www.bilibili.com/video/BV145411t75K/" },
-      { id: "math-integral", number: "04", title: "一元积分与应用", points: "不定积分、换元、分部、定积分、面积与旋转体体积", output: "按方法分类整理积分题", url: "https://www.bilibili.com/video/BV1VE411i73B/" },
-      { id: "math-vector", number: "05", title: "向量与空间解析几何", points: "向量运算、平面与直线方程、位置关系与距离", output: "整理点积、叉积和方程公式", url: "https://www.bilibili.com/video/BV1Gz41187e2/" },
-      { id: "math-multivariable", number: "06", title: "多元函数与曲线积分", points: "偏导、全微分、极值、二重积分、曲线积分与格林公式", output: "会画积分区域并选择积分次序", url: "https://www.bilibili.com/video/BV1Up4y1Y76a/?p=113" },
-      { id: "math-series", number: "07", title: "无穷级数", points: "数项级数、审敛法、幂级数、收敛半径与展开", output: "做一张审敛法决策表", url: "https://www.bilibili.com/video/BV1Ux4y1B7Ub/" },
-      { id: "math-ode", number: "08", title: "常微分方程", points: "可分离变量、一阶线性、可降阶与二阶常系数方程", output: "先判类型，再套对应解法", url: "https://www.bilibili.com/video/BV1GS4y1Y7bP/" },
+      { id: "math-limit", number: "01", title: "函数、极限与连续", points: "函数性质、复合与反函数、数列/函数极限、无穷小、连续与间断", output: "建立极限计算方法清单并做30题", url: "https://www.bilibili.com/video/BV1HP411t7cS/" },
+      { id: "math-derivative", number: "02", title: "一元函数微分学及应用", points: "导数与微分、复合/隐/参数求导、中值定理、洛必达、单调极值、凹凸渐近线", output: "默写求导公式；会画完整符号表", url: "https://www.bilibili.com/video/BV1HP411t7cS/" },
+      { id: "math-integral", number: "03", title: "一元函数积分学及应用", points: "不定积分、换元与分部、定积分、反常积分、平面面积与旋转体体积", output: "按题型选择积分方法并做40题", url: "https://www.bilibili.com/video/BV1HP411t7cS/" },
+      { id: "math-vector", number: "04", title: "向量代数与空间解析几何", points: "向量运算、平面与直线方程、位置关系、距离、常见空间曲面", output: "整理点积、叉积及直线平面公式", url: "https://www.bilibili.com/video/BV1HP411t7cS/" },
+      { id: "math-multidiff", number: "05", title: "多元函数微分学", points: "二元极限与连续、偏导、全微分、复合与隐函数求导、方向导数、极值", output: "完成偏导链式法则与极值专项", url: "https://www.bilibili.com/video/BV1HP411t7cS/" },
+      { id: "math-multiintegral", number: "06", title: "多元函数积分学", points: "二重积分、极坐标换元、两类曲线积分与格林公式", output: "会画积分区域并正确选择积分次序", url: "https://www.bilibili.com/video/BV1HP411t7cS/" },
+      { id: "math-series", number: "07", title: "无穷级数", points: "常数项级数、正项与交错级数审敛、幂级数、收敛域与函数展开", output: "做一张审敛法与幂级数决策表", url: "https://www.bilibili.com/video/BV1HP411t7cS/" },
+      { id: "math-ode", number: "08", title: "常微分方程", points: "可分离变量、齐次、一阶线性、伯努利、可降阶与二阶常系数方程", output: "先判类型，再写通解并验算", url: "https://www.bilibili.com/video/BV1HP411t7cS/" },
     ],
   },
 ];
 
 const phases = [
-  { date: "8—9月", title: "筑地基", detail: "英语语法 + 高频词；高数/语文完成第一轮框架。", tone: "mint" },
+  { date: "8—9月", title: "筑地基", detail: "英语词汇语法 + 高数函数极限、一元微积分，完成第一轮框架。", tone: "mint" },
   { date: "10—12月", title: "做专题", detail: "按章节刷题，建立错题本；每两周做一次计时测验。", tone: "yellow" },
   { date: "1—2月", title: "啃真题", detail: "整卷限时，统计失分原因；弱项回到对应章节补洞。", tone: "blue" },
   { date: "3月起", title: "等公告 · 冲刺", detail: "核对 2027 政策、报名与专业目录；套卷训练并稳住作息。", tone: "coral" },
@@ -249,6 +240,7 @@ const phases = [
 
 const englishPlanUnits = scienceCourseGroups[0].units;
 const mathPlanUnits = scienceCourseGroups[1].units;
+const validCourseIds = new Set(scienceCourseGroups.flatMap((group) => group.units.map((unit) => unit.id)));
 
 function Arrow() {
   return <span aria-hidden="true">↗</span>;
@@ -271,7 +263,7 @@ function writeStorage(key: string, value: string) {
 }
 
 export default function Home() {
-  const [track, setTrack] = useState<Track>("science");
+  const [track] = useState<Track>("science");
   const [filter, setFilter] = useState<ResourceType>("全部");
   const [query, setQuery] = useState("");
   const [courseDone, setCourseDone] = useState<string[]>([]);
@@ -282,22 +274,16 @@ export default function Home() {
   const [plannerLoaded, setPlannerLoaded] = useState(false);
 
   useEffect(() => {
-    const savedTrack = readStorage("sb-track") as Track | null;
     const savedCourses = readStorage("sb-science-courses");
-    if (savedTrack === "science" || savedTrack === "arts") setTrack(savedTrack);
     if (savedCourses) {
       try {
-        setCourseDone(JSON.parse(savedCourses));
+        setCourseDone((JSON.parse(savedCourses) as string[]).filter((id) => validCourseIds.has(id)));
       } catch {
         setCourseDone([]);
       }
     }
     setPlannerLoaded(true);
   }, []);
-
-  useEffect(() => {
-    writeStorage("sb-track", track);
-  }, [track]);
 
   async function checkUpdates() {
     setCheckingUpdates(true);
@@ -319,7 +305,7 @@ export default function Home() {
   function ensureWeeklyPlan(completedCourses: string[]) {
     let history: WeeklyHistory = {};
     try {
-      history = JSON.parse(readStorage("sb-weekly-history-v1") ?? "{}") as WeeklyHistory;
+      history = JSON.parse(readStorage("sb-weekly-history-v2") ?? "{}") as WeeklyHistory;
     } catch {
       history = {};
     }
@@ -328,7 +314,7 @@ export default function Home() {
     if (!current) {
       current = buildWeeklyRecord(new Date(), completedCourses, englishPlanUnits, mathPlanUnits, carryFrom(history, currentKey));
       history = { ...history, [currentKey]: current };
-      writeStorage("sb-weekly-history-v1", JSON.stringify(history));
+      writeStorage("sb-weekly-history-v2", JSON.stringify(history));
     }
     setWeeklyHistory(history);
     setWeekRecord(current);
@@ -369,12 +355,7 @@ export default function Home() {
     const nextHistory = { ...weeklyHistory, [nextRecord.weekKey]: nextRecord };
     setWeekRecord(nextRecord);
     setWeeklyHistory(nextHistory);
-    writeStorage("sb-weekly-history-v1", JSON.stringify(nextHistory));
-  }
-
-  function chooseTrack(next: Track) {
-    setTrack(next);
-    setFilter("全部");
+    writeStorage("sb-weekly-history-v2", JSON.stringify(nextHistory));
   }
 
   function toggleCourse(courseId: string) {
@@ -397,7 +378,7 @@ export default function Home() {
           <a href="#top">首页</a>
           <a href="#updates">实时更新</a>
           <a href="#roadmap">学习路线</a>
-          <a href={track === "science" ? "#syllabus" : "#resources"}>知识点课</a>
+          <a href="#syllabus">知识点课</a>
           <a href="#resources">资源库</a>
           <a href="#checklist">本周计划</a>
         </nav>
@@ -410,21 +391,17 @@ export default function Home() {
         <div className="hero-copy">
           <div className="eyebrow"><span /> 2027 陕西统招专升本备考导航</div>
           <h1>别再到处找课。<br /><em>从今天，照着学。</em></h1>
-          <p className="hero-lead">把官方政策、可直接观看的免费课程和 7 个月复习节奏放在一个页面里。先选你的类别，下面的内容会自动切换。</p>
+          <p className="hero-lead">只服务陕西理工类：把最新官方基线、可直接观看的英语高数课程和 7 个月复习节奏放在一个页面里。</p>
 
-          <div className="track-picker" role="group" aria-label="选择考试类别">
-            <button className={track === "science" ? "active" : ""} onClick={() => chooseTrack("science")}>
+          <div className="track-picker" aria-label="当前考试类别">
+            <button className="active" type="button" aria-pressed="true">
               <span className="track-icon">∫</span>
-              <span><b>理工类</b><small>英语 + 高等数学</small></span>
-            </button>
-            <button className={track === "arts" ? "active" : ""} onClick={() => chooseTrack("arts")}>
-              <span className="track-icon">文</span>
-              <span><b>文史 / 医学 / 艺术</b><small>英语 + 大学语文</small></span>
+              <span><b>陕西理工类专属</b><small>大学英语 + 高等数学</small></span>
             </button>
           </div>
 
           <div className="hero-actions">
-            <a className="primary-button" href={track === "science" ? "#syllabus" : "#resources"}>看适合我的课程 <Arrow /></a>
+            <a className="primary-button" href="#syllabus">开始第一单元 <Arrow /></a>
             <a className="text-button" href="#roadmap">先看怎么安排时间 ↓</a>
           </div>
         </div>
@@ -496,7 +473,7 @@ export default function Home() {
         <div className="weekly-rhythm">
           <div className="rhythm-title"><span>一周模板</span><h3>不用每天“学很久”，要每天有产出</h3></div>
           <div className="rhythm-days">
-            <div><b>周一—周五</b><span>英语 60 分钟</span><span>{track === "science" ? "高数" : "语文"} 90 分钟</span><span>错题 20 分钟</span></div>
+            <div><b>周一—周五</b><span>英语 60 分钟</span><span>高数 90 分钟</span><span>错题 20 分钟</span></div>
             <div><b>周六</b><span>章节测验 1 套</span><span>完整复盘</span></div>
             <div><b>周日</b><span>补欠账</span><span>整理下周清单</span></div>
           </div>
@@ -508,7 +485,7 @@ export default function Home() {
           <div className="section-heading syllabus-heading">
             <div><span className="section-number">02</span><span className="eyebrow dark">仅理工科</span></div>
             <h2>知识点课程表</h2>
-            <p>按陕西理工类公共课范围整理。每学完一项就打勾，进度会保存在当前设备；2027 考试说明发布后再做最终核对。</p>
+            <p>按陕西现行考试说明的稳定范围整理：英语只练词汇语法、阅读、英译汉和写作；高数按8章顺序学习。2027正式说明发布后会再次校准。</p>
           </div>
 
           <div className="syllabus-overview">
@@ -549,7 +526,7 @@ export default function Home() {
                     <span>学完本组，用整卷检查是否真的掌握</span>
                     <div>
                       <a href={group.subject === "大学英语" ? "/papers/english-course-question-bank.pdf" : "/papers/math-course-question-bank.pdf"} download>下载电子题库 <Arrow /></a>
-                      <a href={group.subject === "大学英语" ? "/papers/english-foundation-paper.pdf" : "/papers/math-foundation-paper.pdf"} target="_blank" rel="noreferrer">配套试卷 PDF <Arrow /></a>
+                      <a href={group.subject === "大学英语" ? "/papers/2027-english-prediction-A.pdf" : "/papers/math-foundation-paper.pdf"} target="_blank" rel="noreferrer">配套试卷 PDF <Arrow /></a>
                     </div>
                   </div>
                 </article>
@@ -612,7 +589,7 @@ export default function Home() {
               <div className={`video-poster poster-${index + 1}`}>
                 <span className="video-index">0{index + 1}</span>
                 <span className="play-button" aria-hidden="true">▶</span>
-                <span className="poster-word">{resource.type === "英语" ? "EN" : resource.type === "高数" ? "∫dx" : "语"}</span>
+                <span className="poster-word">{resource.type === "英语" ? "EN" : "∫dx"}</span>
               </div>
               <div className="video-body">
                 <div className="resource-meta"><span>{resource.tag}</span><span>{resource.source}</span></div>
@@ -637,7 +614,7 @@ export default function Home() {
 
         <div className="resource-tools">
           <div className="filter-row" role="group" aria-label="资源类型筛选">
-            {(["全部", "官方", "英语", "高数", "语文", "真题", "题库"] as ResourceType[]).map((item) => (
+            {(["全部", "官方", "英语", "高数", "真题", "题库"] as ResourceType[]).map((item) => (
               <button key={item} className={filter === item ? "active" : ""} onClick={() => setFilter(item)}>{item}</button>
             ))}
           </div>
@@ -664,7 +641,7 @@ export default function Home() {
           ))}
           {visibleResources.length === 0 && <div className="empty-state">没有找到匹配的资源，换个关键词或选择“全部”试试。</div>}
         </div>
-        <p className="source-note">基础资源核对日期：2026-08-01 · 页面顶部可实时检查官方栏目 · 视频均跳转至原发布页，不提供或转载付费资料。</p>
+        <p className="source-note">资源核对日期：2026-08-04 · 页面顶部可实时检查官方栏目 · 视频均跳转至原发布页，不提供或转载付费资料。</p>
       </section>
 
       <section className="section checklist-section" id="checklist">
@@ -718,7 +695,7 @@ export default function Home() {
             </div>
           </>
         ) : (
-          <div className="planner-track-note"><span>∫</span><div><h2>自动周计划目前为理工类设计</h2><p>它会根据英语和高数进度安排任务，并在真题、套卷、冲刺阶段自动换挡。</p><button onClick={() => chooseTrack("science")}>切换到理工类计划</button></div></div>
+          <div className="planner-track-note"><span>∫</span><div><h2>理工类自动周计划</h2><p>它会根据英语和高数进度安排任务，并在真题、套卷、冲刺阶段自动换挡。</p></div></div>
         )}
       </section>
 
@@ -750,7 +727,7 @@ export default function Home() {
         <a href="#top"><span aria-hidden="true">⌂</span><b>首页</b></a>
         <a href="#updates"><span aria-hidden="true">↻</span><b>更新</b></a>
         <a href="#roadmap"><span aria-hidden="true">◇</span><b>路线</b></a>
-        <a href={track === "science" ? "#syllabus" : "#resources"}><span aria-hidden="true">▤</span><b>课程</b></a>
+        <a href="#syllabus"><span aria-hidden="true">▤</span><b>课程</b></a>
         <a href="#resources"><span aria-hidden="true">⌕</span><b>资源</b></a>
         <a href="#checklist"><span aria-hidden="true">✓</span><b>计划 {progress}%</b></a>
       </nav>

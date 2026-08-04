@@ -120,7 +120,7 @@ def cover(subject, title, badge, focus, color):
     meta = Table([
         ["科目", subject, "总分", "150 分"],
         ["建议用时", "150 分钟", "适用阶段", "第一轮 / 第二轮衔接"],
-        ["使用方法", "先独立计时作答，再对答案；错题按知识点归类。", "版本", "2026-08"],
+        ["使用方法", Paragraph("先独立计时作答，再对答案；错题按知识点归类。", SMALL), "版本", "2026-08"],
     ], colWidths=[22 * mm, 56 * mm, 24 * mm, 68 * mm])
     meta.setStyle(TableStyle([
         ("FONTNAME", (0, 0), (-1, -1), "CN"),

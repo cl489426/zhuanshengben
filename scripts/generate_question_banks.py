@@ -59,15 +59,7 @@ def english_bank():
             ("_____ difficult the question is, do not give up immediately.", "A. Whatever  B. However  C. Whenever  D. Wherever", "B。however + 形容词 + 主谓。"),
             ("The book _____ you recommended is very useful.", "A. who  B. whom  C. that  D. whose", "C。先行词为物，关系词在从句中作宾语。"),
         ]),
-        ("单元六  完形填空", "结合语法、搭配与上下文逻辑选择。", [
-            ("A good plan should be simple enough to _____.", "A. repeat  B. refuse  C. disappear  D. waste", "A。计划应便于重复执行。"),
-            ("First, choose one weak point. _____, prepare ten questions about it.", "A. However  B. Next  C. Unless  D. Although", "B。表示步骤顺序。"),
-            ("Do not check the answer _____ you have finished the question.", "A. because  B. until  C. while  D. since", "B。not...until...表示“直到……才”。"),
-            ("If the same error appears again, you should return _____ the concept.", "A. at  B. by  C. to  D. with", "C。return to 表示“回到”。"),
-            ("Review is useful _____ it changes your next action.", "A. when  B. but  C. or  D. so", "A。当复盘能改变下一步行动时才有用。"),
-            ("Small actions repeated every day can lead to a _____ improvement.", "A. steadily  B. steadiness  C. steady  D. steadied", "C。修饰名词 improvement 需要形容词。"),
-        ]),
-        ("单元七  阅读理解", "每题在原文中画出证据句。", [
+        ("单元六  阅读理解与长难句", "先拆长句，再为每题在原文中画出证据句。", [
             ("阅读短文：A study compared rereading with retrieval practice. One group read the same notes three times. The other group closed the notes and wrote down what they remembered after each reading. Both groups spent the same amount of time. A week later, the retrieval group remembered more. The researchers added that students should check their answers after retrieval, because practising a wrong answer can strengthen the mistake. 文章主要比较什么？", "A. Two study methods  B. Two schools  C. Two examinations  D. Two teachers", "A。全文比较重复阅读和检索练习。"),
             ("Which group remembered more after one week?", "A. The rereading group  B. The retrieval group  C. Both equally  D. The article does not say", "B。原文明确说 retrieval group remembered more。"),
             ("What did the retrieval group do after reading?", "A. Watched a video  B. Took a break  C. Wrote what they remembered  D. Changed textbooks", "C。对应原文 wrote down what they remembered。"),
@@ -75,13 +67,21 @@ def english_bank():
             ("The word 'strengthen' is closest in meaning to _____.", "A. make stronger  B. remove  C. hide  D. question", "A。strengthen 表示“加强”。"),
             ("Which statement is supported by the passage?", "A. More time always means better results.  B. Rereading is the only effective method.  C. Active recall with correction supports memory.  D. Students should never read notes.", "C。文章支持主动回忆并及时纠错。"),
         ]),
-        ("单元八  翻译与写作", "先找主干，再处理修饰语；写作必须包含具体行动。", [
-            ("翻译：稳定的学习节奏比偶尔熬夜更有效。", None, "A steady study routine is more effective than staying up late occasionally."),
-            ("翻译：只有独立做题，你才能发现真正的薄弱点。", None, "Only by answering questions independently can you find your real weaknesses."),
-            ("翻译：新公告发布后，我们应该再次核对考试范围。", None, "After the new notice is published, we should check the examination scope again."),
-            ("翻译：他不仅记录错题，而且分析了出错的原因。", None, "He not only recorded the wrong answers but also analysed why the mistakes occurred."),
-            ("写出一句包含定语从句的英语学习建议。", None, "示例：Choose a method that you can repeat every day."),
-            ("写作：以 My Weekly Study Plan 为题写120-180词，包含英语、高数安排和周末检查方式。", None, "评分要点：两科安排具体；至少写出频率或时长；说明周末如何测验与复盘；结构清晰、语法基本正确。"),
+        ("单元七  英译汉", "陕西现行题型为短文英译汉；先找主干，再按中文语序整合。", [
+            ("Translate: A steady study routine is more effective than staying up late occasionally.", None, "稳定的学习节奏比偶尔熬夜更有效。"),
+            ("Translate: Only by answering questions independently can you find your real weaknesses.", None, "只有独立做题，你才能发现真正的薄弱点。"),
+            ("Translate: After the new notice is published, the examination scope should be checked again.", None, "新公告发布后，应再次核对考试范围。"),
+            ("Translate: He not only recorded his mistakes but also analysed why they occurred.", None, "他不仅记录错题，而且分析了出错原因。"),
+            ("Translate: Familiarity with a passage does not necessarily mean that you have mastered it.", None, "对一篇文章感到熟悉，并不一定意味着已经掌握它。"),
+            ("Translate the paragraph: Reliable information cannot replace study, but it can protect your opportunity to take the exam. Save the original official link and check the publication date and deadline.", None, "可靠信息不能代替学习，但能保护你的考试机会。保存官方原文链接，并核对发布日期和截止时间。"),
+        ]),
+        ("单元八  短文与应用文写作", "按120-180词训练；每篇都要审题、列提纲、限时和自查。", [
+            ("用英语写出一个包含具体频率的学习行动。", None, "示例：I review thirty words every morning and test myself every Sunday."),
+            ("用英语写出一个包含定语从句的学习建议。", None, "示例：Choose a method that you can repeat every day."),
+            ("写出书信的称呼和结尾各一种。", None, "示例：Dear Li Hua, ... Yours sincerely, Zhang Ming."),
+            ("为题目 My Biggest Learning Problem 写三句提纲。", None, "要点：说明问题；给出两个具体行动；说明检查进度的方法。"),
+            ("写作：以 My Weekly Study Plan 为题写120-180词，包含英语、高数安排和周末检查方式。", None, "评分要点：两科安排具体；至少写出频率或时长；说明周末如何测验与复盘。"),
+            ("写作：给同学写一封120-180词的建议信，说明如何准备陕西专升本公共课。", None, "评分要点：书信格式正确；建议可执行；包含英语、高数与阶段检查；语言连贯。"),
         ]),
     ]
 
@@ -96,7 +96,7 @@ def english_bank():
         if index and index % 3 == 0: story.append(PageBreak())
         story += section(title + "答案", "先订正，再用自己的话复述规则。")
         story.append(Paragraph("<br/>".join(f"<b>{number}.</b> {answer}" for number, answer in answers), ANSWER_BODY))
-    return build_pdf("english-course-question-bank.pdf", "大学英语", "陕西专升本 · 英语课程配套电子题库", "8单元 · 48题", "词汇｜句法｜时态｜非谓语｜从句｜题型", MINT, story)
+    return build_pdf("english-course-question-bank.pdf", "大学英语", "陕西专升本 · 英语课程配套电子题库", "8单元 · 48题", "词汇语法｜阅读｜英译汉｜写作", MINT, story)
 
 
 def math_bank():
@@ -109,23 +109,15 @@ def math_bank():
             ("若 f(x)=x²+ax 在 x=1 处取得极值，求 a。", None, "a=-2，因为 f'(1)=2+a=0。"),
             ("计算 lim(x→0) (e^(2x)-1)/x。", None, "2。利用 (e^u-1)/u→1。"),
         ]),
-        ("单元二  一元函数微分学", "求导时写清复合函数层次。", [
+        ("单元二  一元函数微分学及应用", "求导写清复合层次；应用题先求定义域、驻点并列表。", [
             ("求 y=x³-2x+1 的导数。", None, "y'=3x²-2。"),
             ("求 y=ln(x²+1) 的导数。", None, "y'=2x/(x²+1)。"),
             ("求 y=x²e^x 的导数。", None, "y'=e^x(x²+2x)。"),
             ("已知 x²+y²=4，求 dy/dx。", None, "y'=-x/y。"),
             ("求 y=sin(3x) 的二阶导数。", None, "y''=-9sin(3x)。"),
-            ("曲线 y=x³ 在点(1,1)处的切线方程。", None, "y-1=3(x-1)，即 y=3x-2。"),
-        ]),
-        ("单元三  导数的应用", "先求临界点，再列表判断符号。", [
-            ("求 f(x)=x²-4x+1 的单调区间。", None, "(-∞,2)递减，(2,+∞)递增。"),
             ("求 f(x)=x³-3x 的极值。", None, "x=-1处极大值2；x=1处极小值-2。"),
-            ("判断 f(x)=ln x-x 在(0,+∞)上的最大值。", None, "x=1处最大值-1。"),
-            ("用洛必达法则计算 lim(x→0)(1-cos x)/x²。", None, "1/2。"),
-            ("求曲线 y=x³-3x² 的凹凸分界点。", None, "f''=6x-6，拐点为(1,-2)。"),
-            ("周长为20的矩形，何时面积最大？", None, "正方形边长5时最大，面积25。"),
         ]),
-        ("单元四  一元积分与应用", "先判断直接积分、换元还是分部积分。", [
+        ("单元三  一元函数积分学及应用", "先判断直接积分、换元还是分部积分。", [
             ("计算 ∫(3x²-2x+1)dx。", None, "x³-x²+x+C。"),
             ("计算 ∫2x cos(x²)dx。", None, "sin(x²)+C。"),
             ("计算 ∫x e^x dx。", None, "e^x(x-1)+C。"),
@@ -133,7 +125,7 @@ def math_bank():
             ("求由 y=x 与 y=x² 围成图形的面积。", None, "∫_0^1(x-x²)dx=1/6。"),
             ("求 y=x²、x=0、x=1及x轴围成图形绕x轴旋转所得体积。", None, "V=π∫_0^1 x^4 dx=π/5。"),
         ]),
-        ("单元五  向量与空间解析几何", "位置关系优先使用方向向量与法向量。", [
+        ("单元四  向量代数与空间解析几何", "位置关系优先使用方向向量与法向量。", [
             ("已知 a=(1,2,-1)，b=(2,0,3)，求 a·b。", None, "-1。"),
             ("求向量 a=(3,4,0) 的模。", None, "5。"),
             ("写出过点(1,0,2)、法向量为(2,-1,1)的平面方程。", None, "2x-y+z-4=0。"),
@@ -141,13 +133,21 @@ def math_bank():
             ("求点(1,2,3)到平面 x+2y+2z-4=0 的距离。", None, "7/3。"),
             ("直线方向向量(1,0,1)与平面法向量(1,2,-1)有何关系？", None, "点积为0，直线与平面平行或位于平面内。"),
         ]),
-        ("单元六  多元函数与曲线积分", "画出积分区域，再决定积分次序。", [
+        ("单元五  多元函数微分学", "先辨认复合层次，再求偏导、全微分或极值。", [
             ("设 z=x²y+e^y，求 z_x。", None, "z_x=2xy。"),
             ("设 z=x²y+e^y，求 z_y。", None, "z_y=x²+e^y。"),
             ("求 z=x²+y² 在点(1,-1)处的全微分。", None, "dz=2dx-2dy。"),
+            ("设 z=e^(xy)，求 z_x。", None, "z_x=y e^(xy)。"),
+            ("求 z=x²+y²-2x-4y 的驻点。", None, "z_x=2x-2=0，z_y=2y-4=0，驻点(1,2)。"),
+            ("判断 z=x²+y²-2x-4y 在驻点(1,2)处的极值。", None, "取得极小值-5。"),
+        ]),
+        ("单元六  多元函数积分学", "画出积分区域，再决定直角坐标、极坐标或曲线积分方法。", [
             ("计算 ∬_D 1dA，其中 D=[0,2]×[0,3]。", None, "6，即区域面积。"),
             ("计算 ∬_D (x+y)dA，其中 D=[0,1]×[0,1]。", None, "1。"),
+            ("将区域 x²+y²≤1 上的二重积分改写为极坐标形式。", None, "0≤r≤1，0≤θ≤2π，面积元为 r dr dθ。"),
             ("计算沿直线段从(0,0)到(1,1)的 ∫(x+y)dx。", None, "令x=t,y=t，积分∫_0^1 2t dt=1。"),
+            ("计算闭曲线 x²+y²=1 正向上的 ∮(-y dx+x dy)。", None, "由格林公式得 ∬_D 2dA=2π。"),
+            ("二重积分交换次序前必须先做什么？", None, "画出积分区域，并用新次序的变量重新表示边界。"),
         ]),
         ("单元七  无穷级数", "先看通项是否趋于0，再选审敛法。", [
             ("判断级数 Σ(1/2)^n（n从1开始）的敛散性并求和。", None, "收敛，和为1。"),
