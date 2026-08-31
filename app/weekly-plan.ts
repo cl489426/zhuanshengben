@@ -24,7 +24,8 @@ export type WeeklyHistory = Record<string, WeeklyRecord>;
 
 type Unit = { id: string; title: string; output: string; url: string };
 
-const ANCHOR = new Date(2026, 7, 3);
+const PLAN_START = new Date(2026, 8, 1);
+const ANCHOR = mondayOf(PLAN_START);
 
 export function mondayOf(date: Date) {
   const result = new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -41,7 +42,7 @@ function isoDate(date: Date) {
 }
 
 export function weekKey(date = new Date()) {
-  return isoDate(mondayOf(date));
+  return isoDate(date < PLAN_START ? ANCHOR : mondayOf(date));
 }
 
 export function formatDateRange(start: string, end: string) {
@@ -52,8 +53,8 @@ export function formatDateRange(start: string, end: string) {
 
 function phaseFor(start: Date): { phase: PlanPhase; label: string } {
   const stamp = start.getTime();
-  if (stamp < new Date(2026, 8, 28).getTime()) return { phase: "foundation", label: "基础搭建" };
-  if (stamp < new Date(2026, 11, 28).getTime()) return { phase: "topic", label: "章节专题" };
+  if (stamp < new Date(2026, 10, 2).getTime()) return { phase: "foundation", label: "基础搭建" };
+  if (stamp < new Date(2027, 0, 4).getTime()) return { phase: "topic", label: "章节专题" };
   if (stamp < new Date(2027, 2, 1).getTime()) return { phase: "papers", label: "真题训练" };
   return { phase: "sprint", label: "套卷冲刺" };
 }
@@ -74,12 +75,13 @@ export function buildWeeklyRecord(
   mathUnits: Unit[],
   carry: WeeklyTask[] = [],
 ): WeeklyRecord {
-  const startDate = mondayOf(date);
+  const startDate = date < PLAN_START ? new Date(ANCHOR) : mondayOf(date);
   const endDate = new Date(startDate);
   endDate.setDate(endDate.getDate() + 6);
+  const displayStartDate = startDate < PLAN_START && endDate >= PLAN_START ? PLAN_START : startDate;
   const key = isoDate(startDate);
   const weekNumber = Math.max(1, Math.floor((startDate.getTime() - ANCHOR.getTime()) / 604800000) + 1);
-  const { phase, label } = phaseFor(startDate);
+  const { phase, label } = phaseFor(displayStartDate);
   const english = nextUnit(englishUnits, completedCourses);
   const math = nextUnit(mathUnits, completedCourses);
   const secondEnglish = nextUnit(englishUnits, completedCourses, 1);
@@ -129,7 +131,7 @@ export function buildWeeklyRecord(
   return {
     weekKey: key,
     weekNumber,
-    start: isoDate(startDate),
+    start: isoDate(displayStartDate),
     end: isoDate(endDate),
     phase,
     phaseLabel: label,

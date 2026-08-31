@@ -22,6 +22,9 @@ test("server-renders the Shaanxi 2027 science study map", async () => {
   const html = await response.text();
   assert.match(html, /<title>升本地图｜陕西专升本学习资源与备考路线<\/title>/);
   assert.match(html, /陕西理工类专属/);
+  assert.match(html, /从 2026 年 9 月 1 日开始/);
+  assert.match(html, /9月1日到考试/);
+  assert.match(html, /9—10月/);
   assert.match(html, /大学英语 \+ 高等数学/);
   assert.match(html, /核心词汇与词法/);
   assert.match(html, /向量代数与空间解析几何/);
@@ -29,10 +32,11 @@ test("server-renders the Shaanxi 2027 science study map", async () => {
   assert.doesNotMatch(html, /文史 \/ 医学 \/ 艺术|大学语文|完形填空/);
 });
 
-test("keeps course links and official baseline in source", async () => {
-  const [page, layout] = await Promise.all([
+test("keeps course links, official baseline and September plan anchor in source", async () => {
+  const [page, layout, weeklyPlan] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/weekly-plan.ts", import.meta.url), "utf8"),
   ]);
 
   assert.match(page, /https:\/\/www\.sneea\.cn\/info\/1031\/17033\.htm/);
@@ -43,4 +47,7 @@ test("keeps course links and official baseline in source", async () => {
   assert.match(page, /math-course-question-bank\.pdf/);
   assert.doesNotMatch(page, /type: "语文"|title: "完形填空"/);
   assert.match(layout, /面向 2027 陕西统招专升本考生/);
+  assert.match(weeklyPlan, /PLAN_START = new Date\(2026, 8, 1\)/);
+  assert.match(weeklyPlan, /new Date\(2026, 10, 2\)/);
+  assert.match(weeklyPlan, /new Date\(2027, 0, 4\)/);
 });

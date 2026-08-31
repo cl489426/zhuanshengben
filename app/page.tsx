@@ -232,8 +232,8 @@ const scienceCourseGroups: { subject: string; subtitle: string; units: CourseUni
 ];
 
 const phases = [
-  { date: "8—9月", title: "筑地基", detail: "英语词汇语法 + 高数函数极限、一元微积分，完成第一轮框架。", tone: "mint" },
-  { date: "10—12月", title: "做专题", detail: "按章节刷题，建立错题本；每两周做一次计时测验。", tone: "yellow" },
+  { date: "9—10月", title: "筑地基", detail: "英语词汇语法 + 高数函数极限、一元微积分，完成第一轮框架。", tone: "mint" },
+  { date: "11—12月", title: "做专题", detail: "按章节刷题，建立错题本；每两周做一次计时测验。", tone: "yellow" },
   { date: "1—2月", title: "啃真题", detail: "整卷限时，统计失分原因；弱项回到对应章节补洞。", tone: "blue" },
   { date: "3月起", title: "等公告 · 冲刺", detail: "核对 2027 政策、报名与专业目录；套卷训练并稳住作息。", tone: "coral" },
 ];
@@ -305,7 +305,7 @@ export default function Home() {
   function ensureWeeklyPlan(completedCourses: string[]) {
     let history: WeeklyHistory = {};
     try {
-      history = JSON.parse(readStorage("sb-weekly-history-v2") ?? "{}") as WeeklyHistory;
+      history = JSON.parse(readStorage("sb-weekly-history-v3") ?? "{}") as WeeklyHistory;
     } catch {
       history = {};
     }
@@ -314,7 +314,7 @@ export default function Home() {
     if (!current) {
       current = buildWeeklyRecord(new Date(), completedCourses, englishPlanUnits, mathPlanUnits, carryFrom(history, currentKey));
       history = { ...history, [currentKey]: current };
-      writeStorage("sb-weekly-history-v2", JSON.stringify(history));
+      writeStorage("sb-weekly-history-v3", JSON.stringify(history));
     }
     setWeeklyHistory(history);
     setWeekRecord(current);
@@ -355,7 +355,7 @@ export default function Home() {
     const nextHistory = { ...weeklyHistory, [nextRecord.weekKey]: nextRecord };
     setWeekRecord(nextRecord);
     setWeeklyHistory(nextHistory);
-    writeStorage("sb-weekly-history-v2", JSON.stringify(nextHistory));
+    writeStorage("sb-weekly-history-v3", JSON.stringify(nextHistory));
   }
 
   function toggleCourse(courseId: string) {
@@ -391,7 +391,7 @@ export default function Home() {
         <div className="hero-copy">
           <div className="eyebrow"><span /> 2027 陕西统招专升本备考导航</div>
           <h1>别再到处找课。<br /><em>从今天，照着学。</em></h1>
-          <p className="hero-lead">只服务陕西理工类：把最新官方基线、可直接观看的英语高数课程和 7 个月复习节奏放在一个页面里。</p>
+          <p className="hero-lead">只服务陕西理工类：从 2026 年 9 月 1 日开始，把最新官方基线、可直接观看的英语高数课程和 7 个月复习节奏放在一个页面里。</p>
 
           <div className="track-picker" aria-label="当前考试类别">
             <button className="active" type="button" aria-pressed="true">
@@ -454,7 +454,7 @@ export default function Home() {
 
       <section className="section roadmap-section" id="roadmap">
         <div className="section-heading">
-          <div><span className="section-number">01</span><span className="eyebrow dark">现在到考试</span></div>
+          <div><span className="section-number">01</span><span className="eyebrow dark">9月1日到考试</span></div>
           <h2>7 个月，分成四段走</h2>
           <p>不要一上来就刷整套真题。先学会，再做对，最后才是做快。</p>
         </div>
@@ -656,7 +656,7 @@ export default function Home() {
             </div>
             <div className="checklist-panel">
               <div className="checklist-copy">
-                <div><span className="section-number light">05</span><span className="eyebrow">每周一自动换新</span></div>
+                <div><span className="section-number light">05</span><span className="eyebrow">9月1日起 · 每周一自动换新</span></div>
                 <h2>{weekRecord ? `第 ${weekRecord.weekNumber} 周` : "本周计划"}，<br />{weekRecord?.phaseLabel ?? "正在生成"}</h2>
                 <p>{weekRecord ? `${formatDateRange(weekRecord.start, weekRecord.end)}。任务根据尚未完成的英语、高数知识点生成；每周一自动切换。` : "正在读取你的课程进度并生成任务。"}</p>
                 {carryCount > 0 && <div className="carry-alert">本周已顺延 {carryCount} 项未完成任务，先清欠账再开新内容。</div>}
