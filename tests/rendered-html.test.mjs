@@ -24,6 +24,9 @@ test("server-renders the Shaanxi 2027 science study map", async () => {
   assert.match(html, /陕西理工类专属/);
   assert.match(html, /从 2026 年 9 月 1 日开始/);
   assert.match(html, /9月1日到考试/);
+  assert.match(html, /9月7日起 · 精确到时间段/);
+  assert.match(html, /06:50—07:20/);
+  assert.match(html, /今天几点，学什么/);
   assert.match(html, /9—10月/);
   assert.match(html, /大学英语 \+ 高等数学/);
   assert.match(html, /核心词汇与词法/);
@@ -32,11 +35,12 @@ test("server-renders the Shaanxi 2027 science study map", async () => {
   assert.doesNotMatch(html, /文史 \/ 医学 \/ 艺术|大学语文|完形填空/);
 });
 
-test("keeps course links, official baseline and September plan anchor in source", async () => {
-  const [page, layout, weeklyPlan] = await Promise.all([
+test("keeps course links, official baseline and September plan anchors in source", async () => {
+  const [page, layout, weeklyPlan, dailyPlan] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/weekly-plan.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/daily-plan.ts", import.meta.url), "utf8"),
   ]);
 
   assert.match(page, /https:\/\/www\.sneea\.cn\/info\/1031\/17033\.htm/);
@@ -50,4 +54,7 @@ test("keeps course links, official baseline and September plan anchor in source"
   assert.match(weeklyPlan, /PLAN_START = new Date\(2026, 8, 1\)/);
   assert.match(weeklyPlan, /new Date\(2026, 10, 2\)/);
   assert.match(weeklyPlan, /new Date\(2027, 0, 4\)/);
+  assert.match(dailyPlan, /DAILY_PLAN_START = new Date\(2026, 8, 7\)/);
+  assert.match(dailyPlan, /08:30—11:00/);
+  assert.match(dailyPlan, /sb-daily-history-v1|buildDailyPlan/);
 });

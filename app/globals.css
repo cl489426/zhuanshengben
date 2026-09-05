@@ -185,6 +185,40 @@ button { color: inherit; }
 .rhythm-days b { margin-bottom: 5px; font-size: 13px; }
 .rhythm-days span { font-size: 12px; color: var(--muted); }
 
+.daily-section { background: #fffdf5; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.daily-heading { margin-bottom: 32px; }
+.daily-toolbar { min-height: 72px; margin-bottom: 22px; padding: 10px 14px; display: flex; align-items: center; justify-content: flex-end; gap: 9px; border: 1px solid var(--line); background: #f1ead6; }
+.daily-toolbar button { min-height: 40px; padding: 0 15px; border: 1px solid var(--green); border-radius: 99px; background: transparent; color: var(--green); font-size: 10px; font-weight: 900; cursor: pointer; }
+.daily-toolbar button:hover { background: var(--green); color: white; }
+.daily-toolbar button:disabled { opacity: .35; cursor: not-allowed; }
+.daily-toolbar label { margin-right: auto; display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: 10px; font-weight: 900; }
+.daily-toolbar input { min-height: 40px; padding: 0 12px; border: 1px solid var(--line); border-radius: 4px; background: #fffdf5; color: var(--ink); font-size: 12px; }
+.daily-board { display: grid; grid-template-columns: minmax(250px, .58fr) minmax(0, 1.42fr); border: 1px solid var(--line); }
+.daily-date-card { min-height: 520px; padding: clamp(28px, 4vw, 52px); display: flex; flex-direction: column; color: white; background: var(--green); }
+.daily-date-card > span { align-self: flex-start; padding: 5px 9px; border-radius: 99px; background: var(--yellow); color: var(--green); font-size: 9px; font-weight: 900; }
+.daily-date-card > strong { margin-top: 34px; font-family: Georgia, "Microsoft YaHei", serif; font-size: clamp(42px, 5vw, 67px); line-height: 1; letter-spacing: -.06em; }
+.daily-date-card > b { margin-top: 12px; color: rgba(255,255,255,.62); font-size: 11px; }
+.daily-date-card > p { margin: 60px 0 0; color: rgba(255,255,255,.76); font-size: 13px; line-height: 1.75; }
+.daily-progress-label { margin-top: auto; display: flex; justify-content: space-between; font-size: 10px; }
+.daily-progress-track { height: 8px; margin: 11px 0 10px; padding: 2px; border: 1px solid rgba(255,255,255,.32); border-radius: 99px; }
+.daily-progress-track span { display: block; height: 100%; border-radius: 99px; background: var(--yellow); transition: width .3s ease; }
+.daily-date-card > small { color: rgba(255,255,255,.48); font-size: 9px; line-height: 1.55; }
+.daily-slot-list { background: white; }
+.daily-slot { min-height: 104px; padding: 15px 22px; display: grid; grid-template-columns: 34px 100px minmax(0, 1fr) auto; align-items: center; gap: 16px; border-bottom: 1px solid var(--line); }
+.daily-slot:last-child { border-bottom: 0; }
+.daily-slot > button { width: 32px; height: 32px; display: grid; place-items: center; border: 1px solid var(--green-2); border-radius: 50%; background: transparent; color: var(--green-2); font-family: Georgia, serif; font-size: 9px; font-weight: 900; cursor: pointer; }
+.daily-slot > time { color: var(--green-2); font-family: Georgia, serif; font-size: 12px; font-weight: 700; }
+.daily-slot > div > span { display: block; color: var(--green-2); font-size: 8px; font-weight: 900; letter-spacing: .1em; }
+.daily-slot h3 { margin: 5px 0 4px; font-size: 15px; }
+.daily-slot p { margin: 0; color: var(--muted); font-size: 10px; line-height: 1.55; }
+.daily-slot > a { white-space: nowrap; padding: 8px 11px; border-radius: 99px; background: #e6efe9; color: var(--green); font-size: 9px; font-weight: 900; }
+.daily-slot > a:hover { background: var(--yellow); }
+.daily-slot.checked { background: rgba(185,228,208,.2); }
+.daily-slot.checked > button { background: var(--yellow); border-color: var(--yellow); color: var(--green); }
+.daily-slot.checked h3 { color: var(--muted); text-decoration: line-through; }
+.daily-slot.checked p { opacity: .5; }
+.daily-note { margin: 15px 0 0; color: var(--muted); font-size: 9px; line-height: 1.7; text-align: right; }
+
 .update-section { padding-top: 72px; padding-bottom: 72px; background: #fffdf5; border-bottom: 1px solid var(--line); }
 .update-head { display: grid; grid-template-columns: .65fr 1.35fr auto; align-items: center; gap: 35px; margin-bottom: 28px; }
 .update-head > div { display: flex; align-items: center; gap: 10px; }
@@ -394,6 +428,9 @@ footer { padding: 60px clamp(24px, 7vw, 116px) 28px; color: white; background: #
   .section-heading p { grid-column: 2; }
   .timeline { grid-template-columns: repeat(2, 1fr); }
   .weekly-rhythm { grid-template-columns: 1fr; }
+  .daily-board { grid-template-columns: 1fr; }
+  .daily-date-card { min-height: 310px; }
+  .daily-date-card > p { margin-top: 35px; }
   .update-head { grid-template-columns: 1fr auto; }
   .update-head > div { grid-column: 1 / -1; }
   .update-grid { grid-template-columns: 1fr; }
@@ -429,6 +466,16 @@ footer { padding: 60px clamp(24px, 7vw, 116px) 28px; color: white; background: #
   .weekly-rhythm { padding: 27px 22px; }
   .rhythm-days { grid-template-columns: 1fr; border-left: 0; }
   .rhythm-days div { min-height: auto; padding: 20px 0; border-right: 0; border-bottom: 1px solid var(--line); }
+  .daily-toolbar { align-items: stretch; flex-wrap: wrap; }
+  .daily-toolbar label { width: 100%; margin: 0 0 3px; justify-content: space-between; }
+  .daily-toolbar input { flex: 1; max-width: 210px; }
+  .daily-toolbar button { flex: 1; padding: 0 9px; }
+  .daily-date-card { min-height: 290px; padding: 28px 24px; }
+  .daily-slot { min-height: 0; padding: 20px 16px; grid-template-columns: 32px 1fr auto; gap: 10px; }
+  .daily-slot > time { grid-column: 2; grid-row: 1; }
+  .daily-slot > div { grid-column: 2 / -1; }
+  .daily-slot > a { grid-column: 2; justify-self: start; }
+  .daily-note { text-align: left; }
   .update-head { display: flex; align-items: flex-start; flex-direction: column; gap: 16px; }
   .update-head h2 { font-size: 35px; }
   .update-status { padding: 25px 20px; }

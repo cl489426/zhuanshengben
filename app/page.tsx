@@ -12,6 +12,14 @@ import {
   type WeeklyHistory,
   type WeeklyRecord,
 } from "./weekly-plan";
+import {
+  buildDailyPlan,
+  clampDailyDate,
+  isoLocalDate,
+  parseLocalDate,
+  shiftDailyDate,
+  type DailyHistory,
+} from "./daily-plan";
 
 type Track = "science" | "arts";
 type ResourceType = "全部" | "官方" | "英语" | "高数" | "真题" | "题库";
@@ -271,6 +279,8 @@ export default function Home() {
   const [checkingUpdates, setCheckingUpdates] = useState(false);
   const [weeklyHistory, setWeeklyHistory] = useState<WeeklyHistory>({});
   const [weekRecord, setWeekRecord] = useState<WeeklyRecord | null>(null);
+  const [dailyDate, setDailyDate] = useState("2026-09-07");
+  const [dailyHistory, setDailyHistory] = useState<DailyHistory>({});
   const [plannerLoaded, setPlannerLoaded] = useState(false);
 
   useEffect(() => {
@@ -282,6 +292,12 @@ export default function Home() {
         setCourseDone([]);
       }
     }
+    try {
+      setDailyHistory(JSON.parse(readStorage("sb-daily-history-v1") ?? "{}") as DailyHistory);
+    } catch {
+      setDailyHistory({});
+    }
+    setDailyDate(isoLocalDate(clampDailyDate(new Date())));
     setPlannerLoaded(true);
   }, []);
 
@@ -345,6 +361,9 @@ export default function Home() {
   const progress = taskCount ? Math.round((completedCount / taskCount) * 100) : 0;
   const carryCount = weekRecord?.tasks.filter((item) => item.kind === "carry").length ?? 0;
   const historyRecords = Object.values(weeklyHistory).sort((a, b) => b.weekKey.localeCompare(a.weekKey));
+  const dailyPlan = buildDailyPlan(parseLocalDate(dailyDate), englishPlanUnits, mathPlanUnits);
+  const dailyCompleted = dailyHistory[dailyPlan.dateKey] ?? [];
+  const dailyProgress = Math.round((dailyCompleted.length / dailyPlan.slots.length) * 100);
 
   function toggleWeeklyTask(taskId: string) {
     if (!weekRecord) return;
@@ -366,6 +385,15 @@ export default function Home() {
     writeStorage("sb-science-courses", JSON.stringify(next));
   }
 
+  function toggleDailyTask(taskId: string) {
+    const completed = dailyCompleted.includes(taskId)
+      ? dailyCompleted.filter((item) => item !== taskId)
+      : [...dailyCompleted, taskId];
+    const nextHistory = { ...dailyHistory, [dailyPlan.dateKey]: completed };
+    setDailyHistory(nextHistory);
+    writeStorage("sb-daily-history-v1", JSON.stringify(nextHistory));
+  }
+
   return (
     <main>
       <header className="site-header">
@@ -378,6 +406,7 @@ export default function Home() {
           <a href="#top">首页</a>
           <a href="#updates">实时更新</a>
           <a href="#roadmap">学习路线</a>
+          <a href="#daily">每日计划</a>
           <a href="#syllabus">知识点课</a>
           <a href="#resources">资源库</a>
           <a href="#checklist">本周计划</a>
@@ -478,6 +507,51 @@ export default function Home() {
             <div><b>周日</b><span>补欠账</span><span>整理下周清单</span></div>
           </div>
         </div>
+      </section>
+
+      <section className="section daily-section" id="daily">
+        <div className="section-heading daily-heading">
+          <div><span className="section-number">日</span><span className="eyebrow dark">9月7日起 · 精确到时间段</span></div>
+          <h2>今天几点，学什么</h2>
+          <p>选择日期就能查看当天安排。工作日稳步学课，周六集中训练，周日补欠账；进入真题和冲刺阶段后会自动换挡。</p>
+        </div>
+
+        <div className="daily-toolbar" aria-label="每日计划日期选择">
+          <button type="button" onClick={() => setDailyDate(shiftDailyDate(dailyDate, -1))} disabled={dailyDate === "2026-09-07"}>← 前一天</button>
+          <label>
+            <span>选择日期</span>
+            <input type="date" min="2026-09-07" value={dailyDate} onChange={(event) => setDailyDate(isoLocalDate(clampDailyDate(parseLocalDate(event.target.value))))} />
+          </label>
+          <button type="button" onClick={() => setDailyDate(isoLocalDate(clampDailyDate(new Date())))}>回到今天</button>
+          <button type="button" onClick={() => setDailyDate(shiftDailyDate(dailyDate, 1))}>后一天 →</button>
+        </div>
+
+        <div className="daily-board">
+          <aside className="daily-date-card">
+            <span>{dailyPlan.phaseLabel}</span>
+            <strong>{dailyPlan.monthDay}</strong>
+            <b>{dailyPlan.weekday} · 第 {dailyPlan.weekNumber} 周</b>
+            <p>今日主线<br />{dailyPlan.focus}</p>
+            <div className="daily-progress-label"><span>完成进度</span><b>{dailyCompleted.length}/{dailyPlan.slots.length}</b></div>
+            <div className="daily-progress-track"><span style={{ width: `${dailyProgress}%` }} /></div>
+            <small>{dailyProgress === 100 ? "今天已经全部完成，可以安心休息。" : "勾选后会自动保存在当前设备。"}</small>
+          </aside>
+
+          <div className="daily-slot-list">
+            {dailyPlan.slots.map((item, index) => {
+              const checked = dailyCompleted.includes(item.id);
+              return (
+                <article className={checked ? "daily-slot checked" : "daily-slot"} key={item.id}>
+                  <button type="button" onClick={() => toggleDailyTask(item.id)} aria-label={`${checked ? "取消完成" : "标记完成"}：${item.title}`} aria-pressed={checked}>{checked ? "✓" : String(index + 1).padStart(2, "0")}</button>
+                  <time>{item.time}</time>
+                  <div><span>{item.subject}</span><h3>{item.title}</h3><p>{item.detail}</p></div>
+                  <a href={item.href} target={item.href.startsWith("http") || item.href.endsWith(".pdf") ? "_blank" : undefined} rel={item.href.startsWith("http") || item.href.endsWith(".pdf") ? "noreferrer" : undefined}>去学习 <Arrow /></a>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+        <p className="daily-note">9月7日以前不生成任务。每天的完成记录保存在当前手机、平板或电脑浏览器中；换设备或清理浏览器数据不会自动同步。</p>
       </section>
 
       {track === "science" && (
@@ -726,7 +800,7 @@ export default function Home() {
       <nav className="mobile-nav" aria-label="移动端快速导航">
         <a href="#top"><span aria-hidden="true">⌂</span><b>首页</b></a>
         <a href="#updates"><span aria-hidden="true">↻</span><b>更新</b></a>
-        <a href="#roadmap"><span aria-hidden="true">◇</span><b>路线</b></a>
+        <a href="#daily"><span aria-hidden="true">◷</span><b>日程</b></a>
         <a href="#syllabus"><span aria-hidden="true">▤</span><b>课程</b></a>
         <a href="#resources"><span aria-hidden="true">⌕</span><b>资源</b></a>
         <a href="#checklist"><span aria-hidden="true">✓</span><b>计划 {progress}%</b></a>
