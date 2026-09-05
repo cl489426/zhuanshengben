@@ -199,6 +199,9 @@ button { color: inherit; }
 .daily-date-card > strong { margin-top: 34px; font-family: Georgia, "Microsoft YaHei", serif; font-size: clamp(42px, 5vw, 67px); line-height: 1; letter-spacing: -.06em; }
 .daily-date-card > b { margin-top: 12px; color: rgba(255,255,255,.62); font-size: 11px; }
 .daily-date-card > p { margin: 60px 0 0; color: rgba(255,255,255,.76); font-size: 13px; line-height: 1.75; }
+.daily-rest-grid { margin-top: 26px; padding-top: 18px; display: grid; gap: 9px; border-top: 1px solid rgba(255,255,255,.17); }
+.daily-rest-grid span { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: rgba(255,255,255,.54); font-size: 9px; }
+.daily-rest-grid b { color: var(--yellow); font-family: Georgia, serif; font-size: 9px; }
 .daily-progress-label { margin-top: auto; display: flex; justify-content: space-between; font-size: 10px; }
 .daily-progress-track { height: 8px; margin: 11px 0 10px; padding: 2px; border: 1px solid rgba(255,255,255,.32); border-radius: 99px; }
 .daily-progress-track span { display: block; height: 100%; border-radius: 99px; background: var(--yellow); transition: width .3s ease; }
@@ -431,6 +434,8 @@ footer { padding: 60px clamp(24px, 7vw, 116px) 28px; color: white; background: #
   .daily-board { grid-template-columns: 1fr; }
   .daily-date-card { min-height: 310px; }
   .daily-date-card > p { margin-top: 35px; }
+  .daily-rest-grid { grid-template-columns: repeat(3, 1fr); }
+  .daily-rest-grid span { align-items: flex-start; flex-direction: column; justify-content: flex-start; }
   .update-head { grid-template-columns: 1fr auto; }
   .update-head > div { grid-column: 1 / -1; }
   .update-grid { grid-template-columns: 1fr; }
@@ -471,6 +476,8 @@ footer { padding: 60px clamp(24px, 7vw, 116px) 28px; color: white; background: #
   .daily-toolbar input { flex: 1; max-width: 210px; }
   .daily-toolbar button { flex: 1; padding: 0 9px; }
   .daily-date-card { min-height: 290px; padding: 28px 24px; }
+  .daily-rest-grid { grid-template-columns: 1fr; }
+  .daily-rest-grid span { flex-direction: row; justify-content: space-between; }
   .daily-slot { min-height: 0; padding: 20px 16px; grid-template-columns: 32px 1fr auto; gap: 10px; }
   .daily-slot > time { grid-column: 2; grid-row: 1; }
   .daily-slot > div { grid-column: 2 / -1; }

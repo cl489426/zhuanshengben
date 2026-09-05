@@ -362,7 +362,8 @@ export default function Home() {
   const carryCount = weekRecord?.tasks.filter((item) => item.kind === "carry").length ?? 0;
   const historyRecords = Object.values(weeklyHistory).sort((a, b) => b.weekKey.localeCompare(a.weekKey));
   const dailyPlan = buildDailyPlan(parseLocalDate(dailyDate), englishPlanUnits, mathPlanUnits);
-  const dailyCompleted = dailyHistory[dailyPlan.dateKey] ?? [];
+  const dailyTaskIds = new Set(dailyPlan.slots.map((item) => item.id));
+  const dailyCompleted = (dailyHistory[dailyPlan.dateKey] ?? []).filter((item) => dailyTaskIds.has(item));
   const dailyProgress = Math.round((dailyCompleted.length / dailyPlan.slots.length) * 100);
 
   function toggleWeeklyTask(taskId: string) {
@@ -511,16 +512,16 @@ export default function Home() {
 
       <section className="section daily-section" id="daily">
         <div className="section-heading daily-heading">
-          <div><span className="section-number">日</span><span className="eyebrow dark">9月7日起 · 精确到时间段</span></div>
-          <h2>今天几点，学什么</h2>
-          <p>选择日期就能查看当天安排。工作日稳步学课，周六集中训练，周日补欠账；进入真题和冲刺阶段后会自动换挡。</p>
+          <div><span className="section-number">日</span><span className="eyebrow dark">9月7日起 · 全日制备考版</span></div>
+          <h2>从早到晚，照表学习</h2>
+          <p>每天约7—8小时有效学习，上午主攻高数，下午主攻英语，晚上强化与复盘；进入真题和冲刺阶段后自动改为整卷训练。</p>
         </div>
 
         <div className="daily-toolbar" aria-label="每日计划日期选择">
           <button type="button" onClick={() => setDailyDate(shiftDailyDate(dailyDate, -1))} disabled={dailyDate === "2026-09-07"}>← 前一天</button>
           <label>
             <span>选择日期</span>
-            <input type="date" min="2026-09-07" value={dailyDate} onChange={(event) => setDailyDate(isoLocalDate(clampDailyDate(parseLocalDate(event.target.value))))} />
+            <input type="date" min="2026-09-07" value={dailyDate} onChange={(event) => event.target.value && setDailyDate(isoLocalDate(clampDailyDate(parseLocalDate(event.target.value))))} />
           </label>
           <button type="button" onClick={() => setDailyDate(isoLocalDate(clampDailyDate(new Date())))}>回到今天</button>
           <button type="button" onClick={() => setDailyDate(shiftDailyDate(dailyDate, 1))}>后一天 →</button>
@@ -532,6 +533,11 @@ export default function Home() {
             <strong>{dailyPlan.monthDay}</strong>
             <b>{dailyPlan.weekday} · 第 {dailyPlan.weekNumber} 周</b>
             <p>今日主线<br />{dailyPlan.focus}</p>
+            <div className="daily-rest-grid" aria-label="固定作息安排">
+              <span><b>12:00—14:00</b>午餐＋午休</span>
+              <span><b>17:20—19:00</b>晚餐＋运动</span>
+              <span><b>22:30 前</b>洗漱并入睡</span>
+            </div>
             <div className="daily-progress-label"><span>完成进度</span><b>{dailyCompleted.length}/{dailyPlan.slots.length}</b></div>
             <div className="daily-progress-track"><span style={{ width: `${dailyProgress}%` }} /></div>
             <small>{dailyProgress === 100 ? "今天已经全部完成，可以安心休息。" : "勾选后会自动保存在当前设备。"}</small>
@@ -551,7 +557,7 @@ export default function Home() {
             })}
           </div>
         </div>
-        <p className="daily-note">9月7日以前不生成任务。每天的完成记录保存在当前手机、平板或电脑浏览器中；换设备或清理浏览器数据不会自动同步。</p>
+        <p className="daily-note">全日制版建议每学习50分钟休息10分钟；午休30—40分钟。9月7日以前不生成任务，完成记录保存在当前设备浏览器中。</p>
       </section>
 
       {track === "science" && (

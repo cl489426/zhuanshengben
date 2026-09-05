@@ -24,9 +24,10 @@ test("server-renders the Shaanxi 2027 science study map", async () => {
   assert.match(html, /陕西理工类专属/);
   assert.match(html, /从 2026 年 9 月 1 日开始/);
   assert.match(html, /9月1日到考试/);
-  assert.match(html, /9月7日起 · 精确到时间段/);
-  assert.match(html, /06:50—07:20/);
-  assert.match(html, /今天几点，学什么/);
+  assert.match(html, /9月7日起 · 全日制备考版/);
+  assert.match(html, /07:30—08:10/);
+  assert.match(html, /从早到晚，照表学习/);
+  assert.match(html, /12:00—14:00/);
   assert.match(html, /9—10月/);
   assert.match(html, /大学英语 \+ 高等数学/);
   assert.match(html, /核心词汇与词法/);
