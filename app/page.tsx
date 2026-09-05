@@ -513,8 +513,8 @@ export default function Home() {
       <section className="section daily-section" id="daily">
         <div className="section-heading daily-heading">
           <div><span className="section-number">日</span><span className="eyebrow dark">9月7日起 · 全日制备考版</span></div>
-          <h2>从早到晚，照表学习</h2>
-          <p>每天约7—8小时有效学习，上午主攻高数，下午主攻英语，晚上强化与复盘；进入真题和冲刺阶段后自动改为整卷训练。</p>
+          <h2>9 点开始，20 点收工</h2>
+          <p>每天只安排两个学习时段：09:00—12:00 主攻高数，16:00—20:00 主攻英语与强化复盘；中午完整休息，不再要求早起。</p>
         </div>
 
         <div className="daily-toolbar" aria-label="每日计划日期选择">
@@ -534,9 +534,9 @@ export default function Home() {
             <b>{dailyPlan.weekday} · 第 {dailyPlan.weekNumber} 周</b>
             <p>今日主线<br />{dailyPlan.focus}</p>
             <div className="daily-rest-grid" aria-label="固定作息安排">
-              <span><b>12:00—14:00</b>午餐＋午休</span>
-              <span><b>17:20—19:00</b>晚餐＋运动</span>
-              <span><b>22:30 前</b>洗漱并入睡</span>
+              <span><b>08:20 左右</b>起床＋早餐</span>
+              <span><b>12:00—16:00</b>午餐＋午休＋自由时间</span>
+              <span><b>18:10—18:30</b>晚餐休息</span>
             </div>
             <div className="daily-progress-label"><span>完成进度</span><b>{dailyCompleted.length}/{dailyPlan.slots.length}</b></div>
             <div className="daily-progress-track"><span style={{ width: `${dailyProgress}%` }} /></div>
@@ -557,7 +557,7 @@ export default function Home() {
             })}
           </div>
         </div>
-        <p className="daily-note">全日制版建议每学习50分钟休息10分钟；午休30—40分钟。9月7日以前不生成任务，完成记录保存在当前设备浏览器中。</p>
+        <p className="daily-note">上午 09:00—12:00，下午 16:00—20:00；每个学习块之间保留10分钟休息，20:00后不再安排任务。完成记录保存在当前设备浏览器中。</p>
       </section>
 
       {track === "science" && (

@@ -25,9 +25,9 @@ test("server-renders the Shaanxi 2027 science study map", async () => {
   assert.match(html, /从 2026 年 9 月 1 日开始/);
   assert.match(html, /9月1日到考试/);
   assert.match(html, /9月7日起 · 全日制备考版/);
-  assert.match(html, /07:30—08:10/);
-  assert.match(html, /从早到晚，照表学习/);
-  assert.match(html, /12:00—14:00/);
+  assert.match(html, /09:00—09:30/);
+  assert.match(html, /9 点开始，20 点收工/);
+  assert.match(html, /12:00—16:00/);
   assert.match(html, /9—10月/);
   assert.match(html, /大学英语 \+ 高等数学/);
   assert.match(html, /核心词汇与词法/);
@@ -56,6 +56,6 @@ test("keeps course links, official baseline and September plan anchors in source
   assert.match(weeklyPlan, /new Date\(2026, 10, 2\)/);
   assert.match(weeklyPlan, /new Date\(2027, 0, 4\)/);
   assert.match(dailyPlan, /DAILY_PLAN_START = new Date\(2026, 8, 7\)/);
-  assert.match(dailyPlan, /08:30—11:00/);
+  assert.match(dailyPlan, /09:30—12:00/);
   assert.match(dailyPlan, /sb-daily-history-v1|buildDailyPlan/);
 });
